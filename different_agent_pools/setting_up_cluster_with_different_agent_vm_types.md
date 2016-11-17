@@ -14,6 +14,7 @@ In order to complete this deployment, you need the following:
 
 For specifics about the cluster, you will need to determine the following:
 
+    - A resource group and location for the entirety of the deployment.
     - For the VNet:
         - A name for the VNet (vnetName)
         - Determine number of subnets
@@ -163,5 +164,37 @@ As such, the acs-engine template file would resemble:
 ```
 
 ### Run acs-engine to generate ARM templates
+
+When running acs-engine, we will assume the following directory structure and files:
+
+```
+- cluster_setup/
+  |-- config/
+      |-- acs-parameters.json
+      |-- vnet-template.json
+  |-- output/
+      |-- acs-engine/
+```
+
+To run:
+
+```bash
+jims@foo:~/cluster_setup$ acs-engine -artifcates ./output/acs-engine ./config/acs-parameters.json
+```
+
+This will read information from the acs-parameters.json file and generate the necessary configuration 
+and templates to deploy the DC/OS cluster.
+
+Upon running, the following files are in the output directory:
+
+```bash
+jims@foo:~/cluster_setup$ ls -l output/
+total 108
+-rw------- 1 jims jims   2470 Nov 17 10:44 apimodel.json
+-rw------- 1 jims jims 100596 Nov 17 10:44 azuredeploy.json
+-rw------- 1 jims jims   1905 Nov 17 10:44 azuredeploy.parameters.json
+```
+
+
 
 
