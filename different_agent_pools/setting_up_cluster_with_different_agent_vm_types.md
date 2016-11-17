@@ -33,6 +33,8 @@ For specifics about the cluster, you will need to determine the following:
 For purposes of showing these values in the template, the variable names above will be 
 prefixed with "master", "publicAgent", "privateAgentN" in the template. 
 
+The overall deployment will look like ![this](https://raw.githubusercontent.com/jmspring/acs-deployments/master/different_agent_pools/acs-dcos-vnet.png)
+
 ## The Process
 
 Using the above information, the process for deploying the desired cluster is as follows:
@@ -104,6 +106,7 @@ As mentioned previously, this deployment assumes three subnets:
 
 As such, the acs-engine template file would resemble:
 
+```javascript
 {
   "apiVersion": "vlabs",
   "properties": {
@@ -150,13 +153,14 @@ As such, the acs-engine template file would resemble:
       "ssh": {
         "publicKeys": [
           {
-            "keyData": ""
+            "keyData": "<sshKeyData>"
           }
         ]
       }
     }
   }
 }
+```
 
 ### Run acs-engine to generate ARM templates
 
