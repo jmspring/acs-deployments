@@ -195,6 +195,81 @@ total 108
 -rw------- 1 jims jims   1905 Nov 17 10:44 azuredeploy.parameters.json
 ```
 
+### Deploy the ARM templates into Azure
 
+To deploy the ARM templates, as mentioned previously, one will need an Azure account and the 
+Azure CLI tools installed.  In this case, the (azure-xplat-cli)[https://github.com/Azure/azure-xplat-cli]
+will be used.
 
+In addition, one will need:
 
+    - The name of a resource group
+    - The location to create and deploy resources into the resource group
+
+To deploy the templates, follow the following steps:
+
+    - Log in to Azure
+    - Create the resource group
+    - Deploy the VNet template
+    - Deploy the DC/OS Cluster template created by acs-engine
+
+To log in to Azure:
+
+```bash
+jims@foo:~/cluster_setup$ azure login
+info:    Executing command login
+|info:    To sign in, use a web browser to open the page https://aka.ms/devicelogin. Enter the code B6LMXDFRE to authenticate.
+|info:    Added subscription Research Playground
+info:    Setting subscription "Research Playground" as default
++
+info:    login command OK
+```
+
+To create the resource group, we will use the resource group name "jmsdcosrg" and deploy
+into West US 2.
+
+```bash
+jims@foo:~/cluster_setup$ azure group create jmsdcosrg westus2
+info:    Executing command group create
++ Getting resource group jmsdcosrg                                             
++ Creating resource group jmsdcosrg                                            
+info:    Created resource group jmsdcosrg
+data:    Id:                  /subscriptions/04f7ec88-8e28-41ed-8537-5e17766001f5/resourceGroups/jmsdcosrg
+data:    Name:                jmsdcosrg
+data:    Location:            westus2
+data:    Provisioning State:  Succeeded
+data:    Tags: null
+data:    
+info:    group create command OK
+```
+
+Deployments can have names, in the case of deploying the vnet template, the deployment will be named
+"vnet-dep".  To deploy the VNet template into the resource group:
+
+```bash
+jims@foo:~/cluster_setup$ azure group deployment create --name "vnet-dep" --resource-group jmsdcosrg --template-file ./config/vnet-template.json 
+info:    Executing command group deployment create
+info:    Supply values for the following parameters
++ Initializing template configurations and parameters                          
++ Creating a deployment                                                        
+info:    Created template deployment "vnet-dep"
++ Waiting for deployment to complete                                           
++                                                                              
+info:    Resource 'jmsdcosvnet' of type 'Microsoft.Network/virtualNetworks' provisioning status is Running
++                                                                              
+...
++                                                                              
+info:    Resource 'jmsdcosvnet' of type 'Microsoft.Network/virtualNetworks' provisioning status is Succeeded
+data:    DeploymentName     : vnet-dep
+data:    ResourceGroupName  : jmsdcosrg
+data:    ProvisioningState  : Succeeded
+data:    Timestamp          : 2016-11-17T19:29:01.320Z
+data:    Mode               : Incremental
+data:    CorrelationId      : 29f4316d-d4f6-4a57-bc2b-ac238afb5460
+info:    group deployment create command OK
+```
+
+And finally, deploying the DC/OS cluster into the resource group and using the VNet just created 
+(note - the deployment is quite verbose and all output will not be shown):
+
+```
