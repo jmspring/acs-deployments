@@ -198,7 +198,7 @@ total 108
 ### Deploy the ARM templates into Azure
 
 To deploy the ARM templates, as mentioned previously, one will need an Azure account and the 
-Azure CLI tools installed.  In this case, the (azure-xplat-cli)[https://github.com/Azure/azure-xplat-cli]
+Azure CLI tools installed.  In this case, the (azure cli)[https://github.com/Azure/azure-cli]
 will be used.
 
 In addition, one will need:
@@ -216,60 +216,114 @@ To deploy the templates, follow the following steps:
 To log in to Azure:
 
 ```bash
-jims@foo:~/cluster_setup$ azure login
-info:    Executing command login
-|info:    To sign in, use a web browser to open the page https://aka.ms/devicelogin. Enter the code B6LMXDFRE to authenticate.
-|info:    Added subscription Research Playground
-info:    Setting subscription "Research Playground" as default
-+
-info:    login command OK
+jims@foo:~/cluster_setup$ az login
+To sign in, use a web browser to open the page https://aka.ms/devicelogin. Enter the code B6C56RN9K to authenticate.
+[
+  {
+    "cloudName": "AzureCloud",
+    "id": "1237ec88-8e28-41ed-8537-5e17766001f5",
+    "isDefault": true,
+    "name": "Deployment Research",
+    "state": "Enabled",
+    "tenantId": "72f999af-86f1-41af-91ab-2d7cd011db47",
+    "user": {
+      "name": "gonzo@fozzy.com",
+      "type": "user"
+    }
+  },
+  {
+    "cloudName": "AzureCloud",
+    "id": "098c6008-210d-409b-96e9-31502661f661",
+    "isDefault": false,
+    "name": "Campus",
+    "state": "Enabled",
+    "tenantId": "72f999af-86f1-41af-91ab-2d7cd011db47",
+    "user": {
+      "name": "gonzo@fozzy.com",
+      "type": "user"
+    }
+  }
+]
 ```
 
 To create the resource group, we will use the resource group name "jmsdcosrg" and deploy
 into West US 2.
 
 ```bash
-jims@foo:~/cluster_setup$ azure group create jmsdcosrg westus2
-info:    Executing command group create
-+ Getting resource group jmsdcosrg                                             
-+ Creating resource group jmsdcosrg                                            
-info:    Created resource group jmsdcosrg
-data:    Id:                  /subscriptions/04f7ec88-8e28-41ed-8537-5e17766001f5/resourceGroups/jmsdcosrg
-data:    Name:                jmsdcosrg
-data:    Location:            westus2
-data:    Provisioning State:  Succeeded
-data:    Tags: null
-data:    
-info:    group create command OK
+jims@foo:~/cluster_setup$ az resource group create --name jmsfoo --location westus2
+{
+  "id": "/subscriptions/1237ec88-8e28-41ed-8537-5e17766001f5/resourceGroups/jmsfoo",
+  "location": "westus2",
+  "managedBy": null,
+  "name": "jmsfoo",
+  "properties": {
+    "provisioningState": "Succeeded"
+  },
+  "tags": null
+}
 ```
 
 Deployments can have names, in the case of deploying the vnet template, the deployment will be named
 "vnet-dep".  To deploy the VNet template into the resource group:
 
 ```bash
-jims@foo:~/cluster_setup$ azure group deployment create --name "vnet-dep" --resource-group jmsdcosrg --template-file ./config/vnet-template.json 
-info:    Executing command group deployment create
-info:    Supply values for the following parameters
-+ Initializing template configurations and parameters                          
-+ Creating a deployment                                                        
-info:    Created template deployment "vnet-dep"
-+ Waiting for deployment to complete                                           
-+                                                                              
-info:    Resource 'jmsdcosvnet' of type 'Microsoft.Network/virtualNetworks' provisioning status is Running
-+                                                                              
-...
-+                                                                              
-info:    Resource 'jmsdcosvnet' of type 'Microsoft.Network/virtualNetworks' provisioning status is Succeeded
-data:    DeploymentName     : vnet-dep
-data:    ResourceGroupName  : jmsdcosrg
-data:    ProvisioningState  : Succeeded
-data:    Timestamp          : 2016-11-17T19:29:01.320Z
-data:    Mode               : Incremental
-data:    CorrelationId      : 29f4316d-d4f6-4a57-bc2b-ac238afb5460
-info:    group deployment create command OK
+jims@foo:~/cluster_setup$ az resource group deployment create --resource-group=jmsdcosrg --template-file=./config/vnet-template.json
+{
+  "id": "/subscriptions/1237ec88-8e28-41ed-8537-5e17766001f5/resourceGroups/jmsdcosrg/providers/Microsoft.Resources/deployments/vnet-template",
+  "name": "vnet-template",
+  "properties": {
+    "correlationId": "9298cc89-7902-4f81-aeea-efae940a6245",
+    "debugSetting": null,
+    "dependencies": [],
+    "mode": "Incremental",
+    "outputs": null,
+    "parameters": {},
+    "parametersLink": null,
+    "providers": [
+      {
+        "id": null,
+        "namespace": "Microsoft.Network",
+        "registrationState": null,
+        "resourceTypes": [
+          {
+            "aliases": null,
+            "apiVersions": null,
+            "locations": [
+              "westus2"
+            ],
+            "properties": null,
+            "resourceType": "virtualNetworks"
+          }
+        ]
+      }
+    ],
+    "provisioningState": "Succeeded",
+    "template": null,
+    "templateLink": null,
+    "timestamp": "2016-11-18T18:59:02.203623+00:00"
+  },
+  "resourceGroup": "jmsdcosrg"
+}
 ```
 
 And finally, deploying the DC/OS cluster into the resource group and using the VNet just created 
 (note - the deployment is quite verbose and all output will not be shown):
 
-```
+```bash
+jims@foo:~/cluster_setup$ az resource group deployment create --resource-group=jmsdcosrg --template-file=./output/azuredeploy.json --parameters "@./output/azuredeploy.parameters.json"
+{
+  "id": "/subscriptions/1237ec88-8e28-41ed-8537-5e17766001f5/resourceGroups/jmsdcosrg/providers/Microsoft.Resources/deployments/azuredeploy",
+  "name": "azuredeploy",
+  "properties": {
+    "correlationId": "6de865fc-34e0-4b6e-bafb-dd0a81039024",
+    "debugSetting": null,
+    "dependencies": [
+    ...
+     ],
+    "provisioningState": "Succeeded",
+    "template": null,
+    "templateLink": null,
+    "timestamp": "2016-11-18T19:24:42.859747+00:00"
+  },
+  "resourceGroup": "jmsdcosrg"
+}
