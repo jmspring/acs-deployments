@@ -68,9 +68,9 @@ are given.  It's easiest to think of a Service Principal as two pieces:
 
 To create the Service Principal, you will need to determine:
 
-    - A **name** for the application.  This will be used in multiple parts of the application 
+    - A name for the application.  This will be used in multiple parts of the application 
       creation command line.
-    - A **password** for the application.
+    - A password for the application.
 
 The steps are:
 
@@ -80,8 +80,8 @@ The steps are:
 
 For this Service Principal, the following values are used:
 
-    - **name**: deisonk8sapp
-    - **password**: DeisAndK8sPlayWell
+    - name: deisonk8sapp
+    - password: DeisAndK8sPlayWell
 
 ```bash
 jims@dockeropolis:~$ az ad app create \
@@ -146,6 +146,6 @@ jims@dockeropolis:~$ az role assignment create --role="Contributor" --assignee="
 Now the creation of the Service Principal is complete.  The two pieces of information needed, 
 for the Service Principal, later in this tutorial from above are:
 
-    - **appId**: 29f7912c-1f26-4b85-9d2d-7f627415276b
-    - **password**: DeisAndK8sPlayWell
+    - appId: 29f7912c-1f26-4b85-9d2d-7f627415276b
+    - password: DeisAndK8sPlayWell
 
