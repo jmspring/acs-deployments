@@ -4,12 +4,12 @@ With the inclusion of Kubernetes as part of the [Azure Container Service](https:
 the deployment of DEIS onto Azure has become significantly easier.  The basic steps to deploy DEIS into Azure
 are as follows:
 
-    - Install the [Azure CLI](https://github.com/Azure/azure-cli)
+    - Install the Azure CLI
     - Log in to your Azure Account
     - Create a Service Principal
     - Create the Kubernetes Cluster using the CLI tools
     - Install and Configure `kubectl`
-    - Install [DEIS Workflow](https://deis.com/docs/workflow/)
+    - Install DEIS Workflow
     - Verify everything is running  
 
 ## Installing the Azure CLI
