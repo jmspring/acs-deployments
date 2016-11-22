@@ -269,7 +269,7 @@ waiting for AAD role to propogate.done
 At this point, the Kubernetes cluster is up and running.  In order to interact with it from
 your local machine, you will need to install and configure `kubectl`.
 
-# Install and Configure `kubectl`
+# Install and Configure kubectl
 
 (kubectl)[http://kubernetes.io/docs/getting-started-guides/kubectl/] is a command-line tool for interacting
 with your Kubernetes cluster.  For this example, `kubectl` will be installed in the bin directory within
