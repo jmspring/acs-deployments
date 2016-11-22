@@ -339,7 +339,7 @@ said, below, the tutorial follows the [DEIS Workflow Quickstart Guide](https://d
 The few steps are:
 
   - Install CLI tools for Helm Classic and DEIS Workflow
-  - Install DEIS Workflow on the Kuberneted Cluster
+  - Install DEIS Workflow on the Kubernetes Cluster
 
 ### Install CLI tools for Helm Classic and DEIS Workflow
 
@@ -382,3 +382,256 @@ jims@dockeropolis:~$ helmc --version
 helmc version 0.8.1+a9c55cf
 ```
 
+### Install DEIS Workflow on the Kubernetes Cluster
+
+Since there is already an existing Kubernetes cluster, the path for installing DEIS Workflow
+follows the [Vagrant procress](https://deis.com/docs/workflow/quickstart/provider/vagrant/install-vagrant/).
+
+First step is to make sure `helmc` finds the config file for `kubectl`.  **Note** - if the terminal 
+session was logged out of or restarted or did anything to disrupt the value of `KUBECONFIG` configured
+above, the appropriate steps will be needed to ensure it is configured correctly.
+
+```bash
+jims@dockeropolis:~$ helmc target
+Kubernetes master is running at https://k8sanddeis-k8s-masters.westus.cloudapp.azure.com
+Heapster is running at https://k8sanddeis-k8s-masters.westus.cloudapp.azure.com/api/v1/proxy/namespaces/kube-system/services/heapster
+KubeDNS is running at https://k8sanddeis-k8s-masters.westus.cloudapp.azure.com/api/v1/proxy/namespaces/kube-system/services/kube-dns
+kubernetes-dashboard is running at https://k8sanddeis-k8s-masters.westus.cloudapp.azure.com/api/v1/proxy/namespaces/kube-system/services/kubernetes-dashboard
+
+To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'.
+```
+
+Looks a lot like the `kubectl cluster-info` call above.
+
+Next step is to add the DEIS chart repository:
+
+```bash
+jims@dockeropolis:~$ helmc repo add deis https://github.com/deis/charts
+---> Checking things locally...
+---> Creating /home/jims/.helmc/config.yaml
+---> Everything looks good! Happy helming!
+---> Continuing onwards and upwards!
+---> Cloning into '/home/jims/.helmc/cache/deis'...
+---> Hooray! Successfully added the repo.
+```
+
+Next retrieve the current DEIS Workflow:
+
+```bash
+jims@dockeropolis:~$ helmc fetch deis/workflow-v2.8.0 
+---> Fetched chart into workspace /home/jims/.helmc/workspace/charts/workflow-v2.8.0
+---> Done
+```
+
+Create the DEIS Workflow manifest for Kubernetes:
+
+```bash
+jims@dockeropolis:~$ helmc generate -x manifests workflow-v2.8.0
+---> Ran 17 generators.
+```
+
+Finally install the DEIS Workflow.  Note that this will take some time.  Using `kubectl` the
+progress of bring up can be monitored.
+
+```bash
+jims@dockeropolis:~$ helmc install workflow-v2.8.0
+---> Running `kubectl create -f` ...
+namespace "deis" created
+
+secret "builder-ssh-private-keys" created
+
+secret "builder-key-auth" created
+
+secret "django-secret-key" created
+
+secret "database-creds" created
+
+secret "logger-redis-creds" created
+
+secret "objectstorage-keyfile" created
+
+secret "deis-router-dhparam" created
+
+serviceaccount "deis-builder" created
+
+serviceaccount "deis-controller" created
+
+serviceaccount "deis-database" created
+
+serviceaccount "deis-logger-fluentd" created
+
+serviceaccount "deis-logger" created
+
+serviceaccount "deis-minio" created
+
+serviceaccount "deis-monitor-telegraf" created
+
+serviceaccount "deis-nsqd" created
+
+serviceaccount "deis-registry" created
+
+serviceaccount "deis-router" created
+
+serviceaccount "deis-workflow-manager" created
+
+service "deis-builder" created
+
+service "deis-controller" created
+
+service "deis-database" created
+
+service "deis-logger-redis" created
+
+service "deis-logger" created
+
+service "deis-minio" created
+
+service "deis-monitor-grafana" created
+
+service "deis-monitor-influxapi" created
+
+service "deis-monitor-influxui" created
+
+service "deis-nsqd" created
+
+service "deis-registry" created
+
+service "deis-router" created
+
+service "deis-workflow-manager" created
+
+replicationcontroller "deis-builder" created
+
+replicationcontroller "deis-controller" created
+
+replicationcontroller "deis-registry" created
+
+replicationcontroller "deis-router" created
+
+replicationcontroller "deis-workflow-manager" created
+
+deployment "deis-builder" created
+
+deployment "deis-controller" created
+
+deployment "deis-database" created
+
+deployment "deis-logger" created
+
+deployment "deis-logger-redis" created
+
+deployment "deis-minio" created
+
+deployment "deis-monitor-grafana" created
+
+deployment "deis-monitor-influxdb" created
+
+deployment "deis-nsqd" created
+
+deployment "deis-registry" created
+
+deployment "deis-router" created
+
+deployment "deis-workflow-manager" created
+
+daemonset "deis-logger-fluentd" created
+
+daemonset "deis-monitor-telegraf" created
+
+daemonset "deis-registry-proxy" created
+
+---> Done
+========================================
+# Workflow v2.8.0
+
+Please report any issues you find in testing Workflow to the appropriate GitHub repository:
+- builder: https://github.com/deis/builder
+- chart: https://github.com/deis/charts
+- controller: https://github.com/deis/controller
+- database: https://github.com/deis/postgres
+- fluentd: https://github.com/deis/fluentd
+- helm classic: https://github.com/helm/helm-classic
+- logger: https://github.com/deis/logger
+- minio: https://github.com/deis/minio
+- monitor: https://github.com/deis/monitor
+- nsq: https://github.com/deis/nsq
+- registry: https://github.com/deis/registry
+- router: https://github.com/deis/router
+- workflow manager: https://github.com/deis/workflow-manager
+========================================
+```
+
+By running `kubectl --namespace=deis get pods`, you can monitor the progress.  An interim 
+check make look something like:
+
+```bash
+jims@dockeropolis:~$ kubectl --namespace=deis get pods
+NAME                                     READY     STATUS             RESTARTS   AGE
+deis-builder-415246326-idzx7             1/1       Running            2          5m
+deis-controller-1590631305-yfpyq         1/1       Running            4          5m
+deis-database-510315365-tdgm9            1/1       Running            0          5m
+deis-logger-9212198-plxlx                1/1       Running            2          5m
+deis-logger-fluentd-6br1y                1/1       Running            0          5m
+deis-logger-fluentd-fi18m                1/1       Running            0          5m
+deis-logger-fluentd-fu2r4                1/1       Running            0          5m
+deis-logger-fluentd-i9n6m                1/1       Running            0          5m
+deis-logger-fluentd-y1uf3                1/1       Running            0          5m
+deis-logger-redis-663064164-vf5m0        1/1       Running            0          5m
+deis-minio-3160338312-xvi2j              1/1       Running            0          5m
+deis-monitor-grafana-432364990-qp26g     1/1       Running            0          5m
+deis-monitor-influxdb-2729526471-2uorw   1/1       Running            0          5m
+deis-monitor-telegraf-3ye0x              0/1       ImagePullBackOff   0          5m
+deis-monitor-telegraf-a2ipa              1/1       Running            0          5m
+deis-monitor-telegraf-c60vu              1/1       Running            0          5m
+deis-monitor-telegraf-kyq4l              1/1       Running            0          5m
+deis-monitor-telegraf-lycuq              1/1       Running            0          5m
+deis-nsqd-3264449345-5fe48               1/1       Running            0          5m
+deis-registry-2182132043-3fbcy           1/1       Running            1          5m
+deis-registry-proxy-72ke5                1/1       Running            0          5m
+deis-registry-proxy-99p6b                1/1       Running            0          5m
+deis-registry-proxy-enci5                1/1       Running            0          5m
+deis-registry-proxy-qa1zn                1/1       Running            0          5m
+deis-registry-proxy-sdtas                1/1       Running            0          5m
+deis-router-2457652422-fxhsn             1/1       Running            0          5m
+deis-workflow-manager-2210821749-bqmya   1/1       Running            0          5m
+```
+
+When the cluster is finally up and running, the output should resemble:
+
+```bash
+jims@dockeropolis:~$ kubectl --namespace=deis get pods
+NAME                                     READY     STATUS    RESTARTS   AGE
+deis-builder-415246326-idzx7             1/1       Running   2          6m
+deis-controller-1590631305-yfpyq         1/1       Running   4          6m
+deis-database-510315365-tdgm9            1/1       Running   0          6m
+deis-logger-9212198-plxlx                1/1       Running   2          6m
+deis-logger-fluentd-6br1y                1/1       Running   0          6m
+deis-logger-fluentd-fi18m                1/1       Running   0          6m
+deis-logger-fluentd-fu2r4                1/1       Running   0          6m
+deis-logger-fluentd-i9n6m                1/1       Running   0          6m
+deis-logger-fluentd-y1uf3                1/1       Running   0          6m
+deis-logger-redis-663064164-vf5m0        1/1       Running   0          6m
+deis-minio-3160338312-xvi2j              1/1       Running   0          6m
+deis-monitor-grafana-432364990-qp26g     1/1       Running   0          6m
+deis-monitor-influxdb-2729526471-2uorw   1/1       Running   0          6m
+deis-monitor-telegraf-3ye0x              1/1       Running   0          6m
+deis-monitor-telegraf-a2ipa              1/1       Running   0          6m
+deis-monitor-telegraf-c60vu              1/1       Running   0          6m
+deis-monitor-telegraf-kyq4l              1/1       Running   0          6m
+deis-monitor-telegraf-lycuq              1/1       Running   0          6m
+deis-nsqd-3264449345-5fe48               1/1       Running   0          6m
+deis-registry-2182132043-3fbcy           1/1       Running   1          6m
+deis-registry-proxy-72ke5                1/1       Running   0          6m
+deis-registry-proxy-99p6b                1/1       Running   0          6m
+deis-registry-proxy-enci5                1/1       Running   0          6m
+deis-registry-proxy-qa1zn                1/1       Running   0          6m
+deis-registry-proxy-sdtas                1/1       Running   0          6m
+deis-router-2457652422-fxhsn             1/1       Running   0          6m
+deis-workflow-manager-2210821749-bqmya   1/1       Running   0          6m
+```
+
+At this point, we have DEIS Workflow running on Azure.
+
+# Next Steps
+
+In a later tutorial deploying applications and monitoring and other topics will be covered.
