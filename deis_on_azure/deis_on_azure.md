@@ -8,6 +8,7 @@ are as follows:
     - Log in to your Azure Account
     - Create a Service Principal
     - Create the Kubernetes Cluster using the CLI tools
+    - Install and Configure `kubectl`
     - Install (DEIS Workflow)[https://deis.com/docs/workflow/]
     - Verify everything is running  
 
@@ -149,3 +150,121 @@ for the Service Principal, later in this tutorial from above are:
     - appId: 29f7912c-1f26-4b85-9d2d-7f627415276b
     - password: DeisAndK8sPlayWell
 
+## Create the Kubernetes Cluster using the CLI tools
+
+For creating the Kubernetes Cluster on Azure, there are two approaches.  The first, and simplest, is
+to use the Azure Container Service Resource Provider (through the portal or through the CLI.  The 
+second is through the open-sources (acs-engine)[https://github.com/Azure/acs-engine] which 
+allows you to customize the templates generated.
+
+The standard deployment that is generated (as well as additional instructions for using acs-engine for
+Kubernetes) can be found (here)[https://github.com/Azure/acs-engine/blob/master/docs/kubernetes.md].
+
+For creating the cluster, we will first need to create a resource group.  For this example, we will need
+both a name for the reesource group and a region within the Azure Cloud to create it:
+
+    - resource-group: "deisonk8srg"
+    - location: "westus"
+
+Creating the resource group:
+
+```bash
+jims@dockeropolis:~$ az resource group create \
+> --name="deisonk8srg" \
+> --location="westus"
+{
+  "id": "/subscriptions/abf7ec88-8e28-41ed-8537-5e17766001f5/resourceGroups/deisonk8srg",
+  "location": "westus",
+  "managedBy": null,
+  "name": "deisonk8srg",
+  "properties": {
+    "provisioningState": "Succeeded"
+  },
+  "tags": null
+}
+```
+
+To create the cluster, additional parameters are needed.
+
+Values needed from above:
+
+    - resource-group: deisonk8srg
+    - location: westus
+    - service-principal: 29f7912c-1f26-4b85-9d2d-7f627415276b
+    - client-secret: DeisAndK8sPlayWell
+
+Additionally, we need information about the cluster itself.  DEIS requires the **kubernetes** 
+**orchestrator**.  For now, it is recommended to use a single master, as HA in Kubernetes 
+masters is not yet supported.  The list of values used in this walk through are as follows:
+
+    - orchestrator: kubernetes
+    - master-count: 1
+    - agent-count: 4
+    - agent-vm-size: Standard_D2_v2 (2 core, 7gb of ram)
+
+Additionally, for naming and administrative purposes, we need to name the admin, the cluster,
+a dns prefix (for public facing resources) and a path to the SSH public key file (of the key
+pair that will be used to access the cluster):
+
+    - admin-username: dadmin
+    - name: k8sanddeis
+    - dns-prefix: k8sanddeis
+    - ssh-key-value file: /home/jims/id_acs_rsa.pub
+
+This results in the following command running:
+
+```bash
+jims@dockeropolis:~$ az acs create \
+> --resource-group="deisonk8srg" \
+> --location="westus" \
+> --service-principal="29f7912c-1f26-4b85-9d2d-7f627415276b" \
+> --client-secret="DeisPlaysWithK8s" \
+> --orchestrator-type=kubernetes \
+> --master-count=1 \
+> --agent-count=4 \
+> --agent-vm-size="Standard_D2_v2" \
+> --admin-username="dadmin" \
+> --name="k8sanddeis" \
+> --dns-prefix="k8sanddeis" \
+> --ssh-key-value @/home/jims/.ssh/id_acs_rsa.pub
+waiting for AAD role to propogate.done
+{
+  "id": "/subscriptions/04f7ec88-8e28-41ed-8537-5e17766001f5/resourceGroups/deisonk8srg/providers/Microsoft.Resources/deployments/azurecli1479772992.8962212",
+  "name": "azurecli1479772992.8962212",
+  "properties": {
+    "correlationId": "2f7ca0b6-b475-43d1-9a19-bbe558b9cee8",
+    "debugSetting": null,
+    "dependencies": [],
+    "mode": "Incremental",
+    "outputs": null,
+    "parameters": null,
+    "parametersLink": null,
+    "providers": [
+      {
+        "id": null,
+        "namespace": "Microsoft.ContainerService",
+        "registrationState": null,
+        "resourceTypes": [
+          {
+            "aliases": null,
+            "apiVersions": null,
+            "locations": [
+              "westus"
+            ],
+            "properties": null,
+            "resourceType": "containerServices"
+          }
+        ]
+      }
+    ],
+    "provisioningState": "Succeeded",
+    "template": null,
+    "templateLink": null,
+    "timestamp": "2016-11-22T00:08:21.619001+00:00"
+  },
+  "resourceGroup": "deisonk8srg"
+}
+```
+
+At this point, the Kubernetes cluster is up and running.  In order to interact with it from
+your local machine, you will need to install and configure `kubectl`.
