@@ -268,3 +268,64 @@ waiting for AAD role to propogate.done
 
 At this point, the Kubernetes cluster is up and running.  In order to interact with it from
 your local machine, you will need to install and configure `kubectl`.
+
+# Install and Configure `kubectl`
+
+(kubectl)[http://kubernetes.io/docs/getting-started-guides/kubectl/] is a command-line tool for interacting
+with your Kubernetes cluster.  For this example, `kubectl` will be installed in the bin directory within
+the existing home directory.  Prebuilt binaries mentioned in the link above will be used.
+
+```bash
+jims@dockeropolis:~$ wget https://storage.googleapis.com/kubernetes-release/release/v1.4.4/bin/linux/amd64/kubectl
+--2016-11-21 17:55:55--  https://storage.googleapis.com/kubernetes-release/release/v1.4.4/bin/linux/amd64/kubectl
+Resolving storage.googleapis.com (storage.googleapis.com)... 216.58.194.176, 2607:f8b0:4005:804::2010
+Connecting to storage.googleapis.com (storage.googleapis.com)|216.58.194.176|:443... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 83220624 (79M) [application/octet-stream]
+Saving to: ‘kubectl’
+
+kubectl                      100%[=============================================>]  79.37M  1.31MB/s    in 2m 18s  
+
+2016-11-21 17:58:14 (590 KB/s) - ‘kubectl’ saved [83220624/83220624]
+
+jims@dockeropolis:~$ chmod +x kubectl
+jims@dockeropolis:~$ mv kubectl ./bin/
+jims@dockeropolis:~$ kubectl version
+Client Version: version.Info{Major:"1", Minor:"4", GitVersion:"v1.4.4", GitCommit:"3b417cc4ccd1b8f38ff9ec96bb50a81ca0ea9d56", GitTreeState:"clean", BuildDate:"2016-10-21T02:48:38Z", GoVersion:"go1.6.3", Compiler:"gc", Platform:"linux/amd64"}
+The connection to the server localhost:8080 was refused - did you specify the right host or port?
+```
+
+At this point, `kubectl` is installed.  Each Kubernetes cluster has a config file which `kubectl` uses.
+When a Kubernetes cluster is deployed via the Azure Container Service Resource Provider, the config can
+be found within on the master node within the home directory of the admin user at `~/.kube/config`.
+
+To retrieve the configuration and bring it locally, we can do the following:
+
+```bash
+jims@dockeropolis:~$ MASTER_K8S_IP=`az network public-ip list --resource-group deisonk8srg | jq -r '.[0].ipAddress'`
+jims@dockeropolis:~$ scp -i ~/.ssh/id_acs_rsa dadmin@$MASTER_K8S_IP:.kube/config ./$MASTER_K8S_IP.kubeconfig
+config                                                                           100% 6293     6.2KB/s   00:00
+jims@dockeropolis:~$ export KUBECONFIG=`pwd`/$MASTER_K8S_IP.kubeconfig
+```
+
+To verify the cluster is up and healthy:
+
+```bash
+jims@dockeropolis:~$ kubectl cluster-info
+Kubernetes master is running at https://k8sanddeis-k8s-masters.westus.cloudapp.azure.com
+Heapster is running at https://k8sanddeis-k8s-masters.westus.cloudapp.azure.com/api/v1/proxy/namespaces/kube-system/services/heapster
+KubeDNS is running at https://k8sanddeis-k8s-masters.westus.cloudapp.azure.com/api/v1/proxy/namespaces/kube-system/services/kube-dns
+kubernetes-dashboard is running at https://k8sanddeis-k8s-masters.westus.cloudapp.azure.com/api/v1/proxy/namespaces/kube-system/services/kubernetes-dashboard
+
+To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'.
+jims@dockeropolis:~$ kubectl get nodes
+NAME                    STATUS                     AGE
+k8s-agent-d84d22f6-0    Ready                      1h
+k8s-agent-d84d22f6-1    Ready                      1h
+k8s-agent-d84d22f6-2    Ready                      1h
+k8s-agent-d84d22f6-3    Ready                      1h
+k8s-master-d84d22f6-0   Ready,SchedulingDisabled   1h
+```
+
+At this point, our cluster should be up and running and healthy.  And we have `kubectl` configured
+for accessing the cluster on our local machine.
