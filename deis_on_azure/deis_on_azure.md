@@ -338,6 +338,47 @@ said, below, the tutorial follows the [DEIS Workflow Quickstart Guide](https://d
 
 The few steps are:
 
-  - Install CLI tools for Helm Classic
-  - Install CLI tools for Deis Workflow
+  - Install CLI tools for Helm Classic and DEIS Workflow
   - Install DEIS Workflow on the Kuberneted Cluster
+
+### Install CLI tools for Helm Classic and DEIS Workflow
+
+The instructions for the installation steps below are found [here](https://deis.com/docs/workflow/quickstart/install-cli-tools/).
+
+For both DEIS and Helm, the binaries will be installed into the same location as `kubectl`, which is the
+`~/bin` directory.
+
+Install DEIS:
+
+```bash
+jims@dockeropolis:~$ curl -sSL http://deis.io/deis-cli/install-v2.sh | bash
+Downloading deis-stable-linux-amd64 From Google Cloud Storage...
+
+deis is now available in your current directory.
+
+To learn more about deis, execute:
+
+    $ ./deis --help
+
+jims@dockeropolis:~$ mv deis ~/bin/
+jims@dockeropolis:~$ deis version
+v2.8.0
+```
+
+Install Helm Classic:
+
+```bash
+jims@dockeropolis:~$ curl -sSL https://get.helm.sh | bash
+Downloading helmc-latest-linux-amd64 from Google Cloud Storage...
+
+helmc is now available in your current directory.
+
+To learn more about helm classic, execute:
+
+    $ ./helmc
+
+jims@dockeropolis:~$ mv helmc ~/bin/
+jims@dockeropolis:~$ helmc --version
+helmc version 0.8.1+a9c55cf
+```
+
