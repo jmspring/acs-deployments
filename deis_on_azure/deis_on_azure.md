@@ -1,15 +1,15 @@
-# Installing DEIS on Azure
+# Installing Deis on Azure
 
 With the inclusion of Kubernetes as part of the [Azure Container Service](https://azure.microsoft.com/en-us/services/container-service/), 
-the deployment of DEIS, using the [DEIS Workflow](https://github.com/deis/workflow) onto Azure has become 
-significantly easier.  The basic steps to deploy DEIS into Azure are as follows:
+the deployment of Deis, using the [Deis Workflow](https://github.com/deis/workflow) onto Azure has become 
+significantly easier.  The basic steps to deploy Deis into Azure are as follows:
 
   - Install the Azure CLI
   - Log in to your Azure Account
   - Create a Service Principal
   - Create the Kubernetes Cluster using the CLI tools
   - Install and Configure `kubectl`
-  - Install DEIS Workflow
+  - Install Deis Workflow
   - Verify everything is running  
 
 ## Installing the Azure CLI
@@ -193,7 +193,7 @@ Values needed from above:
   - service-principal: 29f7912c-1f26-4b85-9d2d-7f627415276b
   - client-secret: DeisAndK8sPlayWell
 
-Additionally, we need information about the cluster itself.  DEIS requires the **kubernetes** 
+Additionally, we need information about the cluster itself.  Deis requires the **kubernetes** 
 **orchestrator**.  For now, it is recommended to use a single master, as HA in Kubernetes 
 masters is not yet supported.  The list of values used in this walk through are as follows:
 
@@ -330,25 +330,25 @@ k8s-master-d84d22f6-0   Ready,SchedulingDisabled   1h
 At this point, our cluster should be up and running and healthy.  And we have `kubectl` configured
 for accessing the cluster on our local machine.
 
-## Install DEIS Workflow
+## Install Deis Workflow
 
-This tutorial is meant to go through all the steps to get DEIS installed on Kubernetes on Azure.
+This tutorial is meant to go through all the steps to get Deis installed on Kubernetes on Azure.
 It is not meant to go through every intricacy or the design concepts or components.  With that 
-said, below, the tutorial follows the [DEIS Workflow Quickstart Guide](https://deis.com/docs/workflow/quickstart/).
+said, below, the tutorial follows the [Deis Workflow Quickstart Guide](https://deis.com/docs/workflow/quickstart/).
 
 The few steps are:
 
-  - Install CLI tools for Helm Classic and DEIS Workflow
-  - Install DEIS Workflow on the Kubernetes Cluster
+  - Install CLI tools for Helm Classic and Deis Workflow
+  - Install Deis Workflow on the Kubernetes Cluster
 
-### Install CLI tools for Helm Classic and DEIS Workflow
+### Install CLI tools for Helm Classic and Deis Workflow
 
 The instructions for the installation steps below are found [here](https://deis.com/docs/workflow/quickstart/install-cli-tools/).
 
-For both DEIS and Helm, the binaries will be installed into the same location as `kubectl`, which is the
+For both Deis and Helm, the binaries will be installed into the same location as `kubectl`, which is the
 `~/bin` directory.
 
-Install DEIS:
+Install Deis:
 
 ```bash
 jims@dockeropolis:~$ curl -sSL http://deis.io/deis-cli/install-v2.sh | bash
@@ -382,9 +382,9 @@ jims@dockeropolis:~$ helmc --version
 helmc version 0.8.1+a9c55cf
 ```
 
-### Install DEIS Workflow on the Kubernetes Cluster
+### Install Deis Workflow on the Kubernetes Cluster
 
-Since there is already an existing Kubernetes cluster, the path for installing DEIS Workflow
+Since there is already an existing Kubernetes cluster, the path for installing Deis Workflow
 follows the [Vagrant procress](https://deis.com/docs/workflow/quickstart/provider/vagrant/install-vagrant/).
 
 First step is to make sure `helmc` finds the config file for `kubectl`.  **Note** - if the terminal 
@@ -403,7 +403,7 @@ To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'.
 
 Looks a lot like the `kubectl cluster-info` call above.
 
-Next step is to add the DEIS chart repository:
+Next step is to add the Deis chart repository:
 
 ```bash
 jims@dockeropolis:~$ helmc repo add deis https://github.com/deis/charts
@@ -415,7 +415,7 @@ jims@dockeropolis:~$ helmc repo add deis https://github.com/deis/charts
 ---> Hooray! Successfully added the repo.
 ```
 
-Next retrieve the current DEIS Workflow:
+Next retrieve the current Deis Workflow:
 
 ```bash
 jims@dockeropolis:~$ helmc fetch deis/workflow-v2.8.0 
@@ -423,14 +423,14 @@ jims@dockeropolis:~$ helmc fetch deis/workflow-v2.8.0
 ---> Done
 ```
 
-Create the DEIS Workflow manifest for Kubernetes:
+Create the Deis Workflow manifest for Kubernetes:
 
 ```bash
 jims@dockeropolis:~$ helmc generate -x manifests workflow-v2.8.0
 ---> Ran 17 generators.
 ```
 
-Finally install the DEIS Workflow.  Note that this will take some time.  Using `kubectl` the
+Finally install the Deis Workflow.  Note that this will take some time.  Using `kubectl` the
 progress of bring up can be monitored.
 
 ```bash
@@ -630,7 +630,7 @@ deis-router-2457652422-fxhsn             1/1       Running   0          6m
 deis-workflow-manager-2210821749-bqmya   1/1       Running   0          6m
 ```
 
-At this point, we have DEIS Workflow running on Azure.
+At this point, we have Deis Workflow running on Azure.
 
 # Next Steps
 
