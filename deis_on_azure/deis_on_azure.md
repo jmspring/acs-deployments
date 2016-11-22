@@ -1,6 +1,6 @@
 # Installing DEIS on Azure
 
-With the inclusion of Kubernetes as part of the (Azure Container Service](https://azure.microsoft.com/en-us/services/container-service/], 
+With the inclusion of Kubernetes as part of the [Azure Container Service](https://azure.microsoft.com/en-us/services/container-service/), 
 the deployment of DEIS onto Azure has become significantly easier.  The basic steps to deploy DEIS into Azure
 are as follows:
 
