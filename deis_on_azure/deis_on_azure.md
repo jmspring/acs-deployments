@@ -1,16 +1,16 @@
 # Installing DEIS on Azure
 
 With the inclusion of Kubernetes as part of the [Azure Container Service](https://azure.microsoft.com/en-us/services/container-service/), 
-the deployment of DEIS onto Azure has become significantly easier.  The basic steps to deploy DEIS into Azure
-are as follows:
+the deployment of DEIS, using the [DEIS Workflow](https://github.com/deis/workflow) onto Azure has become 
+significantly easier.  The basic steps to deploy DEIS into Azure are as follows:
 
-    - Install the Azure CLI
-    - Log in to your Azure Account
-    - Create a Service Principal
-    - Create the Kubernetes Cluster using the CLI tools
-    - Install and Configure `kubectl`
-    - Install DEIS Workflow
-    - Verify everything is running  
+  - Install the Azure CLI
+  - Log in to your Azure Account
+  - Create a Service Principal
+  - Create the Kubernetes Cluster using the CLI tools
+  - Install and Configure `kubectl`
+  - Install DEIS Workflow
+  - Verify everything is running  
 
 ## Installing the Azure CLI
 
@@ -61,28 +61,28 @@ more about your account information.  Below will walk you through the needed inf
 To avoid having to understand too much about Azure Active Directory, basic explanations of each piece 
 are given.  It's easiest to think of a Service Principal as two pieces:
 
-    - An "application" which is an entry in Active Directory that has both a name and a password.  
-      It will also have an Object Identifier (GUID) associated with it.
-    - A "service principal" which is an entry that ties your "application" and is given permissions 
-      to being able to perform certain actions within your subscription.
+  - An "application" which is an entry in Active Directory that has both a name and a password.  
+    It will also have an Object Identifier (GUID) associated with it.
+  - A "service principal" which is an entry that ties your "application" and is given permissions 
+    to being able to perform certain actions within your subscription.
 
 
 To create the Service Principal, you will need to determine:
 
-    - A name for the application.  This will be used in multiple parts of the application 
-      creation command line.
-    - A password for the application.
+  - A name for the application.  This will be used in multiple parts of the application 
+    creation command line.
+  - A password for the application.
 
 The steps are:
 
-    - Create the Application
-    - Create the Service Principal, associating it with the Application
-    - Grant permissions to the Service Principal
+  - Create the Application
+  - Create the Service Principal, associating it with the Application
+  - Grant permissions to the Service Principal
 
 For this Service Principal, the following values are used:
 
-    - name: deisonk8sapp
-    - password: DeisAndK8sPlayWell
+  - name: deisonk8sapp
+  - password: DeisAndK8sPlayWell
 
 ```bash
 jims@dockeropolis:~$ az ad app create \
@@ -147,8 +147,8 @@ jims@dockeropolis:~$ az role assignment create --role="Contributor" --assignee="
 Now the creation of the Service Principal is complete.  The two pieces of information needed, 
 for the Service Principal, later in this tutorial from above are:
 
-    - appId: 29f7912c-1f26-4b85-9d2d-7f627415276b
-    - password: DeisAndK8sPlayWell
+  - appId: 29f7912c-1f26-4b85-9d2d-7f627415276b
+  - password: DeisAndK8sPlayWell
 
 ## Create the Kubernetes Cluster using the CLI tools
 
@@ -163,8 +163,8 @@ Kubernetes) can be found [here](https://github.com/Azure/acs-engine/blob/master/
 For creating the cluster, we will first need to create a resource group.  For this example, we will need
 both a name for the reesource group and a region within the Azure Cloud to create it:
 
-    - resource-group: "deisonk8srg"
-    - location: "westus"
+  - resource-group: "deisonk8srg"
+  - location: "westus"
 
 Creating the resource group:
 
@@ -188,28 +188,28 @@ To create the cluster, additional parameters are needed.
 
 Values needed from above:
 
-    - resource-group: deisonk8srg
-    - location: westus
-    - service-principal: 29f7912c-1f26-4b85-9d2d-7f627415276b
-    - client-secret: DeisAndK8sPlayWell
+  - resource-group: deisonk8srg
+  - location: westus
+  - service-principal: 29f7912c-1f26-4b85-9d2d-7f627415276b
+  - client-secret: DeisAndK8sPlayWell
 
 Additionally, we need information about the cluster itself.  DEIS requires the **kubernetes** 
 **orchestrator**.  For now, it is recommended to use a single master, as HA in Kubernetes 
 masters is not yet supported.  The list of values used in this walk through are as follows:
 
-    - orchestrator: kubernetes
-    - master-count: 1
-    - agent-count: 4
-    - agent-vm-size: Standard_D2_v2 (2 core, 7gb of ram)
+  - orchestrator: kubernetes
+  - master-count: 1
+  - agent-count: 4
+  - agent-vm-size: Standard_D2_v2 (2 core, 7gb of ram)
 
 Additionally, for naming and administrative purposes, we need to name the admin, the cluster,
 a dns prefix (for public facing resources) and a path to the SSH public key file (of the key
 pair that will be used to access the cluster):
 
-    - admin-username: dadmin
-    - name: k8sanddeis
-    - dns-prefix: k8sanddeis
-    - ssh-key-value file: /home/jims/id_acs_rsa.pub
+  - admin-username: dadmin
+  - name: k8sanddeis
+  - dns-prefix: k8sanddeis
+  - ssh-key-value file: /home/jims/id_acs_rsa.pub
 
 This results in the following command running:
 
@@ -269,7 +269,7 @@ waiting for AAD role to propogate.done
 At this point, the Kubernetes cluster is up and running.  In order to interact with it from
 your local machine, you will need to install and configure `kubectl`.
 
-# Install and Configure kubectl
+## Install and Configure kubectl
 
 [kubectl](http://kubernetes.io/docs/getting-started-guides/kubectl/) is a command-line tool for interacting
 with your Kubernetes cluster.  For this example, `kubectl` will be installed in the bin directory within
@@ -329,3 +329,15 @@ k8s-master-d84d22f6-0   Ready,SchedulingDisabled   1h
 
 At this point, our cluster should be up and running and healthy.  And we have `kubectl` configured
 for accessing the cluster on our local machine.
+
+## Install DEIS Workflow
+
+This tutorial is meant to go through all the steps to get DEIS installed on Kubernetes on Azure.
+It is not meant to go through every intricacy or the design concepts or components.  With that 
+said, below, the tutorial follows the [DEIS Workflow Quickstart Guide](https://deis.com/docs/workflow/quickstart/).
+
+The few steps are:
+
+  - Install CLI tools for Helm Classic
+  - Install CLI tools for Deis Workflow
+  - Install DEIS Workflow on the Kuberneted Cluster
