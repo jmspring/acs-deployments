@@ -6,7 +6,7 @@ significantly easier.  The basic steps to deploy Deis into Azure are as follows:
 
   - Install the Azure CLI
   - Log in to your Azure Account
-  - Create a Service Principal
+  - Create a Service Principal (optional)
   - Create the Kubernetes Cluster using the CLI tools
   - Install and Configure `kubectl`
   - Install Deis Workflow
@@ -48,6 +48,10 @@ To sign in, use a web browser to open the page [https://aka.ms/devicelogin] and 
 The device login screen looks like [this](https://raw.githubusercontent.com/jmspring/acs-deployments/master/deis_on_azure/device_login.png).
 
 ## Create a Service Principal
+
+When using the Azure Portal, a Service Principal is required.  What a Service Principal is and how to 
+create one is outlined below.  In this tutorial, since it uses the Azure CLI, specifying a Service 
+Principal is optional.  If one is not specified, it will be created as part of the deployment.
 
 A Service Principal is an entity that is granted rights to perform various actions within a subscription.
 For Kubernetes on Azure, a Service Principal is needed because the Kubernetes Azure Provider uses it to 
@@ -190,6 +194,11 @@ Values needed from above:
 
   - resource-group: deisonk8srg
   - location: westus
+
+If you are specifying a Service Principal, then you will also need the following values.  (Note,
+from above, if you don't specify a Service Principal the creation of the Kubernetes Cluster will
+create one for you.)
+
   - service-principal: 29f7912c-1f26-4b85-9d2d-7f627415276b
   - client-secret: DeisAndK8sPlayWell
 
@@ -211,7 +220,26 @@ pair that will be used to access the cluster):
   - dns-prefix: k8sanddeis
   - ssh-key-value file: /home/jims/id_acs_rsa.pub
 
-This results in the following command running:
+Using the above, you run one of the following two commands depending on if you are specifying
+the Service Principal or you are not.
+
+Without a Service Principal:
+
+```bash
+jims@dockeropolis:~$ az acs create \
+> --resource-group="deisonk8srg" \
+> --location="westus" \
+> --orchestrator-type=kubernetes \
+> --master-count=1 \
+> --agent-count=4 \
+> --agent-vm-size="Standard_D2_v2" \
+> --admin-username="dadmin" \
+> --name="k8sanddeis" \
+> --dns-prefix="k8sanddeis" \
+> --ssh-key-value @/home/jims/.ssh/id_acs_rsa.pub
+```
+
+Or with a Service Principal:
 
 ```bash
 jims@dockeropolis:~$ az acs create \
@@ -227,6 +255,11 @@ jims@dockeropolis:~$ az acs create \
 > --name="k8sanddeis" \
 > --dns-prefix="k8sanddeis" \
 > --ssh-key-value @/home/jims/.ssh/id_acs_rsa.pub
+```
+
+The result for both will resemble:
+
+```bash
 waiting for AAD role to propogate.done
 {
   "id": "/subscriptions/04f7ec88-8e28-41ed-8537-5e17766001f5/resourceGroups/deisonk8srg/providers/Microsoft.Resources/deployments/azurecli1479772992.8962212",
