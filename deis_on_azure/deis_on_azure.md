@@ -1,20 +1,20 @@
 # Installing DEIS on Azure
 
-With the inclusion of Kubernetes as part of the (Azure Container Service)[https://azure.microsoft.com/en-us/services/container-service/], 
+With the inclusion of Kubernetes as part of the (Azure Container Service](https://azure.microsoft.com/en-us/services/container-service/], 
 the deployment of DEIS onto Azure has become significantly easier.  The basic steps to deploy DEIS into Azure
 are as follows:
 
-    - Install the (Azure CLI)[https://github.com/Azure/azure-cli]
+    - Install the [Azure CLI](https://github.com/Azure/azure-cli)
     - Log in to your Azure Account
     - Create a Service Principal
     - Create the Kubernetes Cluster using the CLI tools
     - Install and Configure `kubectl`
-    - Install (DEIS Workflow)[https://deis.com/docs/workflow/]
+    - Install [DEIS Workflow](https://deis.com/docs/workflow/)
     - Verify everything is running  
 
 ## Installing the Azure CLI
 
-The (Azure CLI)[https://github.com/Azure/azure-cli] (also known as Azure CLI 2.0 Preview) is the recommended way
+The [Azure CLI](https://github.com/Azure/azure-cli) (also known as Azure CLI 2.0 Preview) is the recommended way
 to interact with the Azure Container Service.  It has support for the Kubernetes Orchestrator.
 
 Installation is documented on the github repository.  Options include native install (Windows, Linux, and OSX)
@@ -23,12 +23,12 @@ to your environment.
 
 ## Log in to your Azure Account
 
-Once you have the tools installed, you need an (Azure account)[https://azure.microsoft.com/en-us/free/].  You
+Once you have the tools installed, you need an [Azure account](https://azure.microsoft.com/en-us/free/).  You
 will also need to know your **username** and **password** to login.  To login with the CLI:
 
 ```bash
 jims@dockeropolis:~$ az login
-To sign in, use a web browser to open the page https://aka.ms/devicelogin and enter the code BPM3W42L8 to authenticate.
+To sign in, use a web browser to open the page [https://aka.ms/devicelogin] and enter the code BPM3W42L8 to authenticate.
 [
   {
     "cloudName": "AzureCloud",
@@ -54,7 +54,7 @@ For Kubernetes on Azure, a Service Principal is needed because the Kubernetes Az
 manipulate or create or destroy resources as needed.
 
 In the Azure CLI 2.0 Preview, there are commands to simplify the creation of a Service Principal.  As of
-version (v0.1.0b9)[https://github.com/Azure/azure-cli/releases/tag/all-v0.1.0b9], the single command for
+version [v0.1.0b9](https://github.com/Azure/azure-cli/releases/tag/all-v0.1.0b9), the single command for
 creatinig a Service Principal is a bit flakey.  Below are the steps needed, they do involve knowing a bit
 more about your account information.  Below will walk you through the needed information.  
 
@@ -154,11 +154,11 @@ for the Service Principal, later in this tutorial from above are:
 
 For creating the Kubernetes Cluster on Azure, there are two approaches.  The first, and simplest, is
 to use the Azure Container Service Resource Provider (through the portal or through the CLI.  The 
-second is through the open-sources (acs-engine)[https://github.com/Azure/acs-engine] which 
+second is through the open-sources [acs-engine](https://github.com/Azure/acs-engine) which 
 allows you to customize the templates generated.
 
 The standard deployment that is generated (as well as additional instructions for using acs-engine for
-Kubernetes) can be found (here)[https://github.com/Azure/acs-engine/blob/master/docs/kubernetes.md].
+Kubernetes) can be found [here](https://github.com/Azure/acs-engine/blob/master/docs/kubernetes.md).
 
 For creating the cluster, we will first need to create a resource group.  For this example, we will need
 both a name for the reesource group and a region within the Azure Cloud to create it:
@@ -271,7 +271,7 @@ your local machine, you will need to install and configure `kubectl`.
 
 # Install and Configure kubectl
 
-(kubectl)[http://kubernetes.io/docs/getting-started-guides/kubectl/] is a command-line tool for interacting
+[kubectl](http://kubernetes.io/docs/getting-started-guides/kubectl/) is a command-line tool for interacting
 with your Kubernetes cluster.  For this example, `kubectl` will be installed in the bin directory within
 the existing home directory.  Prebuilt binaries mentioned in the link above will be used.
 
