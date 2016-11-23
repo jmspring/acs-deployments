@@ -73,3 +73,154 @@ Updating the DNS records at Joker for the name will look like:
 
 <img src="https://raw.githubusercontent.com/jmspring/acs-deployments/master/deis_on_azure/joker_dns.png" width="480">
 
+To create the Wildcard A Record in the Azure DNS Zone, the public IP address of the Deis Router IP is needed.
+To get that information, use `kubectl`:
+
+```bash
+jims@dockeropolis:~$ kubectl --namespace=deis describe svc deis-router
+Name:			deis-router
+Namespace:		deis
+Labels:			heritage=deis
+Selector:		app=deis-router
+Type:			LoadBalancer
+IP:			10.0.155.69
+LoadBalancer Ingress:	168.61.71.200
+Port:			http	80/TCP
+NodePort:		http	30912/TCP
+Endpoints:		10.244.4.6:8080
+Port:			https	443/TCP
+NodePort:		https	32356/TCP
+Endpoints:		10.244.4.6:6443
+Port:			builder	2222/TCP
+NodePort:		builder	31775/TCP
+Endpoints:		10.244.4.6:2222
+Port:			healthz	9090/TCP
+NodePort:		healthz	32570/TCP
+Endpoints:		10.244.4.6:9090
+Session Affinity:	None
+```
+
+From the above, the IP address needed is the `LoadBalancer Ingress`, which is `168.61.71.200`.
+
+Using this value, the Wildcard A Record is in two stages.  First a Record Set is created within
+the DNS Zone `plusonetechnology.net`:
+
+```bash
+jims@dockeropolis:~$ az network dns record-set create \
+> --resource-group="deisonk8srg" \
+> --zone-name="plusonetechnology.net" \
+> --type="A" \
+> --name="*"
+{
+  "aaaaRecords": null,
+  "arecords": [],
+  "cnameRecord": null,
+  "etag": "c8ad5d09-8e0b-49aa-b531-b1c62b17cbdc",
+  "id": "/subscriptions/04f7ec88-8e28-41ed-8537-5e17766001f5/resourceGroups/deisonk8srg/providers/Microsoft.Network/dnszones/plusonetechnology.net/A/*",
+  "metadata": null,
+  "mxRecords": null,
+  "name": "*",
+  "nsRecords": null,
+  "ptrRecords": null,
+  "resourceGroup": "deisonk8srg",
+  "soaRecord": null,
+  "srvRecords": null,
+  "ttl": 3600,
+  "txtRecords": null,
+  "type": "Microsoft.Network/dnszones/A"
+}
+```
+
+Second, you need to add the Deis `LoadBalancer Ingress` IP address to the record:
+
+```bash
+jims@dockeropolis:~$ az network dns record a add \
+> --resource-group="deisonk8srg" \
+> --zone-name="plusonetechnology.net" \
+> --record-set-name="*" \
+> --ipv4-address="168.61.71.200"
+{
+  "aaaaRecords": null,
+  "arecords": [
+    {
+      "ipv4Address": "168.61.71.200"
+    }
+  ],
+  "cnameRecord": null,
+  "etag": "c0b891dd-7623-4770-8fac-904eabd4b8b8",
+  "id": "/subscriptions/04f7ec88-8e28-41ed-8537-5e17766001f5/resourceGroups/deisonk8srg/providers/Microsoft.Network/dnszones/plusonetechnology.net/A/*",
+  "metadata": null,
+  "mxRecords": null,
+  "name": "*",
+  "nsRecords": null,
+  "ptrRecords": null,
+  "resourceGroup": "deisonk8srg",
+  "soaRecord": null,
+  "srvRecords": null,
+  "ttl": 3600,
+  "txtRecords": null,
+  "type": "Microsoft.Network/dnszones/A"
+}
+```
+
+To list record set details:
+
+```bash
+jims@dockeropolis:~$ az network dns record-set show \
+> --resource-group="deisonk8srg" 
+> --zone-name="plusonetechnology.net" 
+> --type=A 
+> --name="*"
+{
+  "aaaaRecords": null,
+  "arecords": [
+    {
+      "ipv4Address": "168.61.71.200"
+    }
+  ],
+  "cnameRecord": null,
+  "etag": "c0b891dd-7623-4770-8fac-904eabd4b8b8",
+  "id": "/subscriptions/04f7ec88-8e28-41ed-8537-5e17766001f5/resourceGroups/deisonk8srg/providers/Microsoft.Network/dnszones/plusonetechnology.net/A/*",
+  "metadata": null,
+  "mxRecords": null,
+  "name": "*",
+  "nsRecords": null,
+  "ptrRecords": null,
+  "resourceGroup": "deisonk8srg",
+  "soaRecord": null,
+  "srvRecords": null,
+  "ttl": 3600,
+  "txtRecords": null,
+  "type": "Microsoft.Network/dnszones/A"
+}
+```
+
+Which looks identical to the output of adding the IPv4 address to the record in the prior step.  To note:
+the older Azure-xplat-cli allowed this to be done in one step, why Azure CLI 2.0 Preview requires two 
+steps is a curious requirement.  There are issues open around this on [github](https://github.com/Azure/azure-cli/issues/1134).
+
+To verify DNS is working correctly and that multiple domain names resolve to the `LoadBalancer Ingress` IP,
+try a couple of calls to `nslookup`:
+
+```bash
+jims@dockeropolis:~$ nslookup gonzo.plusonetechnology.net
+Server:		10.211.55.1
+Address:	10.211.55.1#53
+
+Non-authoritative answer:
+Name:	gonzo.plusonetechnology.net
+Address: 168.61.71.200
+
+jims@dockeropolis:~$ nslookup rizzo.plusonetechnology.net
+Server:		10.211.55.1
+Address:	10.211.55.1#53
+
+Non-authoritative answer:
+Name:	rizzo.plusonetechnology.net
+Address: 168.61.71.200
+```
+
+
+
+
+
