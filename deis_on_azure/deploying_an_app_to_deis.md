@@ -68,7 +68,8 @@ jims@dockeropolis:~$ az network dns zone create --name="plusonetechnology.net" -
 In the information returned, note the list of name servers.  In order to delegate DNS resolution for 
 the domain choser, the DNS entries for the domain need to be updated at the registrar the domain is 
 registered with.  For the domain `plusonetechnology.net`, the registrar is [Joker](http://joker.com).  
+
 Updating the DNS records at Joker for the name will look like:
 
-![DNS update](https://raw.githubusercontent.com/jmspring/acs-deployments/master/deis_on_azure/joker_dns.png)
+<img src="https://raw.githubusercontent.com/jmspring/acs-deployments/master/deis_on_azure/joker_dns.png" width="480">
 
