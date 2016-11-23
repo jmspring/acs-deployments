@@ -220,6 +220,36 @@ Name:	rizzo.plusonetechnology.net
 Address: 168.61.71.200
 ```
 
+## Register an Admin User
+
+Now that DNS is setup for the Deis Workflow, the next step is to register an admin user with
+the Deis Workflow.  The details we will use for the admin account are:
+
+  - username: admin
+  - password: <password of choice>
+  - email: jaspring@microsoft.com
+
+The command:
+
+```
+jims@dockeropolis:~$ deis register http://deis.plusonetechnology.net
+username: admin
+password: 
+password (confirm): 
+email: jaspring@microsoft.com
+Registered admin
+username: admin
+password: 
+Logged in as admin
+Configuration file written to /home/jims/.deis/client.json
+```
+
+Upon registering you are prompted for the details (as noted above).  The second request for
+username and password is to actually log in do Deis.
+
+With the user created and logged in, an application can now be deployed.
+
+
 
 
 
