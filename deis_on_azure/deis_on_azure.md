@@ -92,8 +92,8 @@ For this Service Principal, the following values are used:
 jims@dockeropolis:~$ az ad app create \
 > --display-name="deisonk8sapp" \
 > --homepage="http://localhost/deisonk8sapp" \ 
-> --identifier-uris="http://localhost/deisonk8sapp" 
-> --key-type="Password" 
+> --identifier-uris="http://localhost/deisonk8sapp" \ 
+> --key-type="Password" \
 > --password="DeisAndK8sPlayWell"
 {
   "appId": "29f7912c-1f26-4b85-9d2d-7f627415276b",
