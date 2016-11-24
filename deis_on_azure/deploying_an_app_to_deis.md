@@ -17,7 +17,6 @@ The steps for deploying an application are:
   - Register an Admin User
   - Deploy an Application
   - Change the Application Configuration
-  - Scale the Application
 
 ## Setup Azure DNS
 
@@ -249,8 +248,62 @@ username and password is to actually log in do Deis.
 
 With the user created and logged in, an application can now be deployed.
 
+## Deploy an Application
 
+To deploy an application per the Deis Workflow tutorial, there are two steps to follow:
 
+  - Create a new application (more like application name space)
+  - Deploy an application into that name space
 
+To create the application:
 
+```bash
+jims@dockeropolis:~$ deis create --no-remote
+Creating Application... done, created flaxen-lambskin
+If you want to add a git remote for this app later, use `deis git:remote -a flaxen-lambskin`
+```
+
+Note, you can specify a name, but if you don't, Deis can come up with some fun name options.
+
+Part of what  the `deis create` command actually does is sets up a mapping for incoming requests
+to the application, so HTTP requests to (in the case of above) `http://flaxen-lambskin.plusonetechnology.net` 
+will get routed to the application deployed to that name space.
+
+Per the Deis Workflow, an application will deployed to the namespace generated, in this case
+`flaxen-lambskin`.  To do such, using the Deis Workflow example:
+
+```bash
+jims@dockeropolis:~$ deis pull deis/example-go -a flaxen-lambskin
+Creating build... done
+```
+
+To see the application was deployed, let's make a `curl` call:
+
+```bash
+jims@dockeropolis:~$ curl http://flaxen-lambskin.plusonetechnology.net
+Powered by Deis
+```
+
+## Change the Application Configuration
+
+At this point, we have the Deis Workflow sample application deployed and working on Kubernetes on Azure.  
+The next step in the tutorial is to change the configuration:
+
+```bash
+jims@dockeropolis:~$ deis config:set POWERED_BY="Docker Images + Kubernetes + Azure" -a flaxen-lambskin
+Creating config... done
+
+=== flaxen-lambskin Config
+POWERED_BY      Docker Images + Kubernetes + Azure
+```
+
+To verify the configuration change:
+
+```bash
+jims@dockeropolis:~$ curl flaxen-lambskin.plusonetechnology.net
+Powered by Docker Images + Kubernetes + Azure
+```
+
+The [Deis Workflow - Deploy an App](https://deis.com/docs/workflow/quickstart/deploy-an-app/) documentation
+describes scaling the app, but just builds on our already working situation.
 
