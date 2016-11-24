@@ -7,7 +7,9 @@ significantly easier.  The basic steps to deploy Deis into Azure are as follows:
   - Install the Azure CLI
   - Log in to your Azure Account
   - Create a Service Principal (optional)
-  - Create the Kubernetes Cluster using the CLI tools
+  - Create the Kubernetes Cluster
+    - Using the CLI tools
+    - Using acs-engine 
   - Install and Configure `kubectl`
   - Install Deis Workflow
   - Verify everything is running  
@@ -154,7 +156,7 @@ for the Service Principal, later in this tutorial from above are:
   - appId: 29f7912c-1f26-4b85-9d2d-7f627415276b
   - password: DeisAndK8sPlayWell
 
-## Create the Kubernetes Cluster using the CLI tools
+## Create the Kubernetes Cluster
 
 For creating the Kubernetes Cluster on Azure, there are two approaches.  The first, and simplest, is
 to use the Azure Container Service Resource Provider (through the portal or through the CLI.  The 
@@ -162,9 +164,10 @@ second is through the open-sources [acs-engine](https://github.com/Azure/acs-eng
 allows you to customize the templates generated.
 
 The standard deployment that is generated (as well as additional instructions for using acs-engine for
-Kubernetes) can be found [here](https://github.com/Azure/acs-engine/blob/master/docs/kubernetes.md).
+Kubernetes) can be found [here](https://github.com/Azure/acs-engine/blob/master/docs/kubernetes.md).  A 
+brief walk through using `acs-engine` is included below.
 
-For creating the cluster, we will first need to create a resource group.  For this example, we will need
+For each deployment method, you will need to create a resource group.  For this example, we will need
 both a name for the reesource group and a region within the Azure Cloud to create it:
 
   - resource-group: "deisonk8srg"
@@ -188,16 +191,16 @@ jims@dockeropolis:~$ az resource group create \
 }
 ```
 
-To create the cluster, additional parameters are needed.
+For each deployment method below, additional parameters are needed.  
 
-Values needed from above:
+Values needed from the resource group:
 
   - resource-group: deisonk8srg
   - location: westus
 
-If you are specifying a Service Principal, then you will also need the following values.  (Note,
-from above, if you don't specify a Service Principal the creation of the Kubernetes Cluster will
-create one for you.)
+The `acs-engine` deployment requires a Service Principal.  The CLI deployment using the 
+ACS Resource Provider can either specity a Service Principal or one will be created.  In
+the case where a Service Principal is specified, then you will also need the following values.  
 
   - service-principal: 29f7912c-1f26-4b85-9d2d-7f627415276b
   - client-secret: DeisAndK8sPlayWell
@@ -220,8 +223,20 @@ pair that will be used to access the cluster):
   - dns-prefix: k8sanddeis
   - ssh-key-value file: /home/jims/id_acs_rsa.pub
 
-Using the above, you run one of the following two commands depending on if you are specifying
-the Service Principal or you are not.
+For the `acs-engine` deployment approach, the contents of `/home/jims/id_acs_rsa.pub` will 
+be used.
+
+Once the resource group is created, decide which deployment method is desirable.  Use the
+values above to deploy the cluster.
+
+### Create the Kubernetes Cluster using the CLI tools
+
+**NOTE** In a couple of deployments attempting to create Deis applications resulted in an Internal 
+Server Error due to validation issues of the Kubernetes apiserver certificate.  For now, it is 
+recommended to use the **Create the Kubernetes Cluster using acs-engine** approach below.
+
+Using the parameters specified above, you run one of the following two CLI commands depending on 
+if you are specifying the Service Principal or you are not.
 
 Without a Service Principal:
 
@@ -262,7 +277,7 @@ The result for both will resemble:
 ```bash
 waiting for AAD role to propogate.done
 {
-  "id": "/subscriptions/04f7ec88-8e28-41ed-8537-5e17766001f5/resourceGroups/deisonk8srg/providers/Microsoft.Resources/deployments/azurecli1479772992.8962212",
+  "id": "/subscriptions/abf7ec88-8e28-41ed-8537-5e17766001f5/resourceGroups/deisonk8srg/providers/Microsoft.Resources/deployments/azurecli1479772992.8962212",
   "name": "azurecli1479772992.8962212",
   "properties": {
     "correlationId": "2f7ca0b6-b475-43d1-9a19-bbe558b9cee8",
@@ -299,10 +314,184 @@ waiting for AAD role to propogate.done
 }
 ```
 
-At this point, the Kubernetes cluster is up and running.  In order to interact with it from
-your local machine, you will need to install and configure `kubectl`.
+### Create the Kubernetes Cluster using acs-engine
+
+Another approach to deploying a Kubernetes cluster on to Azure is to use the 
+[acs-engine](https://github.com/Azure/acs-engine/blob/master/docs/kubernetes.md).  Rather 
+than going completely through the linked tutorial, this section assumes:
+
+  - `acs-engine` has been pulled and installed locally
+  - The cluster deployed through `acs-engine` will use the same properties as the one deployed in the prior section.
+
+When using `acs-engine` for a vanilla deployment, the process is pretty simple:
+
+  - Fill out an `acs-engine` parameters file.
+  - Run `acs-engine` on the parameters file.
+  - Use the Azure CLI to deploy the generated template.
+
+The base Kubernetes parameters file is:
+
+```bash
+{
+  "apiVersion": "vlabs",
+  "properties": {
+    "orchestratorProfile": {
+      "orchestratorType": "Kubernetes"
+    },
+    "masterProfile": {
+      "count": 1,
+      "dnsPrefix": "",
+      "vmSize": "Standard_D2_v2"
+    },
+    "agentPoolProfiles": [
+      {
+        "name": "agentpool1",
+        "count": 3,
+        "vmSize": "Standard_D2_v2",
+        "availabilityProfile": "AvailabilitySet"
+      }
+    ],
+    "linuxProfile": {
+      "adminUsername": "",
+      "ssh": {
+        "publicKeys": [
+          {
+            "keyData": ""
+          }
+        ]
+      }
+    },
+    "servicePrincipalProfile": {
+      "servicePrincipalClientID": "",
+      "servicePrincipalClientSecret": ""
+    }
+  }
+}
+```
+
+Using the parameters previously specified, a filled out parameters file will look like:
+
+```bash
+{
+  "apiVersion": "vlabs",
+  "properties": {
+    "orchestratorProfile": {
+      "orchestratorType": "Kubernetes"
+    },
+    "masterProfile": {
+      "count": 1,
+      "dnsPrefix": "k8sanddeis",
+      "vmSize": "Standard_D2_v2"
+    },
+    "agentPoolProfiles": [
+      {
+        "name": "agentpool1",
+        "count": 4,
+        "vmSize": "Standard_D2_v2",
+        "availabilityProfile": "AvailabilitySet"
+      }
+    ],
+    "linuxProfile": {
+      "adminUsername": "dadmin",
+      "ssh": {
+        "publicKeys": [
+          {
+            "keyData": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC5GaGb48t3eNRt6HNkiRGhneNPs1m0o2TtXmVUFyqPn5x5k/PUnJib0PSS/0LL8HrkKuDdVlEIkojROya9OD5cwoe/xfjxjFXhNqsP8F/NY57b6M1KGpX1cq8zv3M2HTQWwnmGwImG3/UM7qbi/4Z5EZ3lCngEfYsio6
+cmtpb3EI/A8WAAHj5SD0EgYajznmkCiEn2ls7Nf94t8PdXxZUpCuHagpG+8T61ysbO/qDDTvw2c3LHttfOtPLQrKwA/k6n9kHDTyDZ22KUJDD6s0TvzqQhsYVGo640Y7+qkgUy+vsvzFDOhShjrMEY+g6XbQDpTt3KaDfHGKpYwBo6UumT jims@dockeropolis"
+          }
+        ]
+      }
+    },
+    "servicePrincipalProfile": {
+      "servicePrincipalClientID": "29f7912c-1f26-4b85-9d2d-7f627415276b",
+      "servicePrincipalClientSecret": "DeisAndK8sPlayWell"
+    }
+  }
+}
+```
+
+Assume this file is `/home/jims/kubernetes.json`.
+
+Given the above parameters file, use `acs-engine` to generate the required templates.  The target
+output directory for the templates will be `/home/jims/acs-out/`.  Given that, the command line for
+generating the configuration files is:
+
+```bash
+jims@dockeropolis:~$/ acs-engine -artifacts /home/jims/acs-out` /home/jims/kubernetes.json
+cert creation took 9.142963463s
+wrote /home/jims/acs-out/apimodel.json
+wrote /home/jims/acs-out/azuredeploy.json
+wrote /home/jims/acs-out/azuredeploy.parameters.json
+wrote /home/jims/acs-out/kubeconfig/kubeconfig.australiaeast.json
+wrote /home/jims/acs-out/kubeconfig/kubeconfig.australiasoutheast.json
+wrote /home/jims/acs-out/kubeconfig/kubeconfig.brazilsouth.json
+wrote /home/jims/acs-out/kubeconfig/kubeconfig.canadacentral.json
+wrote /home/jims/acs-out/kubeconfig/kubeconfig.canadaeast.json
+wrote /home/jims/acs-out/kubeconfig/kubeconfig.centralindia.json
+wrote /home/jims/acs-out/kubeconfig/kubeconfig.centralus.json
+wrote /home/jims/acs-out/kubeconfig/kubeconfig.eastasia.json
+wrote /home/jims/acs-out/kubeconfig/kubeconfig.eastus.json
+wrote /home/jims/acs-out/kubeconfig/kubeconfig.eastus2.json
+wrote /home/jims/acs-out/kubeconfig/kubeconfig.japaneast.json
+wrote /home/jims/acs-out/kubeconfig/kubeconfig.japanwest.json
+wrote /home/jims/acs-out/kubeconfig/kubeconfig.northcentralus.json
+wrote /home/jims/acs-out/kubeconfig/kubeconfig.northeurope.json
+wrote /home/jims/acs-out/kubeconfig/kubeconfig.southcentralus.json
+wrote /home/jims/acs-out/kubeconfig/kubeconfig.southeastasia.json
+wrote /home/jims/acs-out/kubeconfig/kubeconfig.southindia.json
+wrote /home/jims/acs-out/kubeconfig/kubeconfig.uksouth.json
+wrote /home/jims/acs-out/kubeconfig/kubeconfig.ukwest.json
+wrote /home/jims/acs-out/kubeconfig/kubeconfig.westcentralus.json
+wrote /home/jims/acs-out/kubeconfig/kubeconfig.westeurope.json
+wrote /home/jims/acs-out/kubeconfig/kubeconfig.westindia.json
+wrote /home/jims/acs-out/kubeconfig/kubeconfig.westus.json
+wrote /home/jims/acs-out/kubeconfig/kubeconfig.westus2.json
+wrote /home/jims/acs-out/ca.key
+wrote /home/jims/acs-out/ca.crt
+wrote /home/jims/acs-out/apiserver.key
+wrote /home/jims/acs-out/apiserver.crt
+wrote /home/jims/acs-out/client.key
+wrote /home/jims/acs-out/client.crt
+wrote /home/jims/acs-out/kubectlClient.key
+wrote /home/jims/acs-out/kubectlClient.crt
+acsengine took 9.172658455s
+```
+
+`acs-engine` creates the needed templates and other ancilary files.  To deploy the template 
+created, the relevant files are `/home/jims/acs-out/azuredeploy.json` and 
+`/home/jims/acs-out/azuredeploy.parameters.json`.  The command to deploy the templates is as
+follows:
+
+```bash
+az resource group deployment create \
+> --name "deisonk8s-dep" \
+> --resource-group="deisonk8srg" \
+> --template-file /home/jims/acs-out/azuredeploy.json \
+> --parameters @/home/jims/acs-out/azuredeploy.parameters.json
+{
+  "id": "/subscriptions/abf7ec88-8e28-41ed-8537-5e17766001f5/resourceGroups/deisonk8srg/providers/Microsoft.Resources/deployments/deisonk8s-dep",
+  "name": "deisonk8s-dep",
+  "properties": {
+    "correlationId": "f212d96c-de23-4e3c-aba0-4e1d14f95353",
+    "debugSetting": null,
+    "dependencies": [
+    ...
+    ],
+    "provisioningState": "Succeeded",
+    "template": null,
+    "templateLink": null,
+    "timestamp": "2016-11-24T00:26:28.144455+00:00"
+  },
+  "resourceGroup": "deisonk8srg"
+}
+```
+
+Note the full output from above is quite long `...` implies missing content.  The actual output can be seen [here](https://raw.githubusercontent.com/jmspring/acs-deployments/master/deis_on_azure/acs-engine_deploy_output.json).
 
 ## Install and Configure kubectl
+
+At this point, the Kubernetes cluster is up and running.  In order to interact with it from
+your local machine, you will need to install and configure `kubectl`.
 
 [kubectl](http://kubernetes.io/docs/getting-started-guides/kubectl/) is a command-line tool for interacting
 with your Kubernetes cluster.  For this example, `kubectl` will be installed in the bin directory within
