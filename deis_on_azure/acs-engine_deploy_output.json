@@ -1,0 +1,614 @@
+{
+  "id": "/subscriptions/abf7ec88-8e28-41ed-8537-5e17766001f5/resourceGroups/deisonk8srg/providers/Microsoft.Resources/deployments/deisonk8s-dep",
+  "name": "deisonk8s-dep",
+  "properties": {
+    "correlationId": "f212d96c-de23-4e3c-aba0-4e1d14f95353",
+    "debugSetting": null,
+    "dependencies": [
+      {
+        "dependsOn": [
+          {
+            "id": "/subscriptions/abf7ec88-8e28-41ed-8537-5e17766001f5/resourceGroups/deisonk8srg/providers/Microsoft.Network/publicIPAddresses/k8s-master-ip-deisonk8s-27785909",
+            "resourceGroup": "deisonk8srg",
+            "resourceName": "k8s-master-ip-deisonk8s-27785909",
+            "resourceType": "Microsoft.Network/publicIPAddresses"
+          }
+        ],
+        "id": "/subscriptions/abf7ec88-8e28-41ed-8537-5e17766001f5/resourceGroups/deisonk8srg/providers/Microsoft.Storage/storageAccounts/l7cttahzry3v6mstr0",
+        "resourceGroup": "deisonk8srg",
+        "resourceName": "l7cttahzry3v6mstr0",
+        "resourceType": "Microsoft.Storage/storageAccounts"
+      },
+      {
+        "dependsOn": [
+          {
+            "id": "/subscriptions/abf7ec88-8e28-41ed-8537-5e17766001f5/resourceGroups/deisonk8srg/providers/Microsoft.Network/networkSecurityGroups/k8s-master-27785909-nsg",
+            "resourceGroup": "deisonk8srg",
+            "resourceName": "k8s-master-27785909-nsg",
+            "resourceType": "Microsoft.Network/networkSecurityGroups"
+          },
+          {
+            "id": "/subscriptions/abf7ec88-8e28-41ed-8537-5e17766001f5/resourceGroups/deisonk8srg/providers/Microsoft.Network/routeTables/k8s-master-27785909-routetable",
+            "resourceGroup": "deisonk8srg",
+            "resourceName": "k8s-master-27785909-routetable",
+            "resourceType": "Microsoft.Network/routeTables"
+          }
+        ],
+        "id": "/subscriptions/abf7ec88-8e28-41ed-8537-5e17766001f5/resourceGroups/deisonk8srg/providers/Microsoft.Network/virtualNetworks/k8s-vnet-27785909",
+        "resourceGroup": "deisonk8srg",
+        "resourceName": "k8s-vnet-27785909",
+        "resourceType": "Microsoft.Network/virtualNetworks"
+      },
+      {
+        "dependsOn": [
+          {
+            "id": "/subscriptions/abf7ec88-8e28-41ed-8537-5e17766001f5/resourceGroups/deisonk8srg/providers/Microsoft.Network/publicIPAddresses/k8s-master-ip-deisonk8s-27785909",
+            "resourceGroup": "deisonk8srg",
+            "resourceName": "k8s-master-ip-deisonk8s-27785909",
+            "resourceType": "Microsoft.Network/publicIPAddresses"
+          }
+        ],
+        "id": "/subscriptions/abf7ec88-8e28-41ed-8537-5e17766001f5/resourceGroups/deisonk8srg/providers/Microsoft.Network/loadBalancers/k8s-master-lb-27785909",
+        "resourceGroup": "deisonk8srg",
+        "resourceName": "k8s-master-lb-27785909",
+        "resourceType": "Microsoft.Network/loadBalancers"
+      },
+      {
+        "dependsOn": [
+          {
+            "id": "/subscriptions/abf7ec88-8e28-41ed-8537-5e17766001f5/resourceGroups/deisonk8srg/providers/Microsoft.Network/virtualNetworks/k8s-vnet-27785909",
+            "resourceGroup": "deisonk8srg",
+            "resourceName": "k8s-vnet-27785909",
+            "resourceType": "Microsoft.Network/virtualNetworks"
+          }
+        ],
+        "id": "/subscriptions/abf7ec88-8e28-41ed-8537-5e17766001f5/resourceGroups/deisonk8srg/providers/Microsoft.Network/networkInterfaces/k8s-agentpool1-27785909-nic-0",
+        "resourceGroup": "deisonk8srg",
+        "resourceName": "k8s-agentpool1-27785909-nic-0",
+        "resourceType": "Microsoft.Network/networkInterfaces"
+      },
+      {
+        "dependsOn": [
+          {
+            "id": "/subscriptions/abf7ec88-8e28-41ed-8537-5e17766001f5/resourceGroups/deisonk8srg/providers/Microsoft.Network/virtualNetworks/k8s-vnet-27785909",
+            "resourceGroup": "deisonk8srg",
+            "resourceName": "k8s-vnet-27785909",
+            "resourceType": "Microsoft.Network/virtualNetworks"
+          }
+        ],
+        "id": "/subscriptions/abf7ec88-8e28-41ed-8537-5e17766001f5/resourceGroups/deisonk8srg/providers/Microsoft.Network/networkInterfaces/k8s-agentpool1-27785909-nic-1",
+        "resourceGroup": "deisonk8srg",
+        "resourceName": "k8s-agentpool1-27785909-nic-1",
+        "resourceType": "Microsoft.Network/networkInterfaces"
+      },
+      {
+        "dependsOn": [
+          {
+            "id": "/subscriptions/abf7ec88-8e28-41ed-8537-5e17766001f5/resourceGroups/deisonk8srg/providers/Microsoft.Network/virtualNetworks/k8s-vnet-27785909",
+            "resourceGroup": "deisonk8srg",
+            "resourceName": "k8s-vnet-27785909",
+            "resourceType": "Microsoft.Network/virtualNetworks"
+          }
+        ],
+        "id": "/subscriptions/abf7ec88-8e28-41ed-8537-5e17766001f5/resourceGroups/deisonk8srg/providers/Microsoft.Network/networkInterfaces/k8s-agentpool1-27785909-nic-2",
+        "resourceGroup": "deisonk8srg",
+        "resourceName": "k8s-agentpool1-27785909-nic-2",
+        "resourceType": "Microsoft.Network/networkInterfaces"
+      },
+      {
+        "dependsOn": [
+          {
+            "id": "/subscriptions/abf7ec88-8e28-41ed-8537-5e17766001f5/resourceGroups/deisonk8srg/providers/Microsoft.Network/virtualNetworks/k8s-vnet-27785909",
+            "resourceGroup": "deisonk8srg",
+            "resourceName": "k8s-vnet-27785909",
+            "resourceType": "Microsoft.Network/virtualNetworks"
+          }
+        ],
+        "id": "/subscriptions/abf7ec88-8e28-41ed-8537-5e17766001f5/resourceGroups/deisonk8srg/providers/Microsoft.Network/networkInterfaces/k8s-agentpool1-27785909-nic-3",
+        "resourceGroup": "deisonk8srg",
+        "resourceName": "k8s-agentpool1-27785909-nic-3",
+        "resourceType": "Microsoft.Network/networkInterfaces"
+      },
+      {
+        "dependsOn": [
+          {
+            "id": "/subscriptions/abf7ec88-8e28-41ed-8537-5e17766001f5/resourceGroups/deisonk8srg/providers/Microsoft.Network/publicIPAddresses/k8s-master-ip-deisonk8s-27785909",
+            "resourceGroup": "deisonk8srg",
+            "resourceName": "k8s-master-ip-deisonk8s-27785909",
+            "resourceType": "Microsoft.Network/publicIPAddresses"
+          }
+        ],
+        "id": "/subscriptions/abf7ec88-8e28-41ed-8537-5e17766001f5/resourceGroups/deisonk8srg/providers/Microsoft.Storage/storageAccounts/00l7cttahzry3v6agnt0",
+        "resourceGroup": "deisonk8srg",
+        "resourceName": "00l7cttahzry3v6agnt0",
+        "resourceType": "Microsoft.Storage/storageAccounts"
+      },
+      {
+        "dependsOn": [
+          {
+            "id": "/subscriptions/abf7ec88-8e28-41ed-8537-5e17766001f5/resourceGroups/deisonk8srg/providers/Microsoft.Storage/storageAccounts/00l7cttahzry3v6agnt0",
+            "resourceGroup": "deisonk8srg",
+            "resourceName": "00l7cttahzry3v6agnt0",
+            "resourceType": "Microsoft.Storage/storageAccounts"
+          },
+          {
+            "id": "/subscriptions/abf7ec88-8e28-41ed-8537-5e17766001f5/resourceGroups/deisonk8srg/providers/Microsoft.Network/networkInterfaces/k8s-agentpool1-27785909-nic-0",
+            "resourceGroup": "deisonk8srg",
+            "resourceName": "k8s-agentpool1-27785909-nic-0",
+            "resourceType": "Microsoft.Network/networkInterfaces"
+          },
+          {
+            "id": "/subscriptions/abf7ec88-8e28-41ed-8537-5e17766001f5/resourceGroups/deisonk8srg/providers/Microsoft.Compute/availabilitySets/agentpool1-availabilitySet-27785909",
+            "resourceGroup": "deisonk8srg",
+            "resourceName": "agentpool1-availabilitySet-27785909",
+            "resourceType": "Microsoft.Compute/availabilitySets"
+          },
+          {
+            "id": "/subscriptions/abf7ec88-8e28-41ed-8537-5e17766001f5/resourceGroups/deisonk8srg/providers/Microsoft.Storage/storageAccounts/00l7cttahzry3v6agnt0",
+            "resourceGroup": "deisonk8srg",
+            "resourceName": "00l7cttahzry3v6agnt0",
+            "resourceType": "Microsoft.Storage/storageAccounts"
+          }
+        ],
+        "id": "/subscriptions/abf7ec88-8e28-41ed-8537-5e17766001f5/resourceGroups/deisonk8srg/providers/Microsoft.Compute/virtualMachines/k8s-agentpool1-27785909-0",
+        "resourceGroup": "deisonk8srg",
+        "resourceName": "k8s-agentpool1-27785909-0",
+        "resourceType": "Microsoft.Compute/virtualMachines"
+      },
+      {
+        "dependsOn": [
+          {
+            "id": "/subscriptions/abf7ec88-8e28-41ed-8537-5e17766001f5/resourceGroups/deisonk8srg/providers/Microsoft.Storage/storageAccounts/00l7cttahzry3v6agnt0",
+            "resourceGroup": "deisonk8srg",
+            "resourceName": "00l7cttahzry3v6agnt0",
+            "resourceType": "Microsoft.Storage/storageAccounts"
+          },
+          {
+            "id": "/subscriptions/abf7ec88-8e28-41ed-8537-5e17766001f5/resourceGroups/deisonk8srg/providers/Microsoft.Network/networkInterfaces/k8s-agentpool1-27785909-nic-1",
+            "resourceGroup": "deisonk8srg",
+            "resourceName": "k8s-agentpool1-27785909-nic-1",
+            "resourceType": "Microsoft.Network/networkInterfaces"
+          },
+          {
+            "id": "/subscriptions/abf7ec88-8e28-41ed-8537-5e17766001f5/resourceGroups/deisonk8srg/providers/Microsoft.Compute/availabilitySets/agentpool1-availabilitySet-27785909",
+            "resourceGroup": "deisonk8srg",
+            "resourceName": "agentpool1-availabilitySet-27785909",
+            "resourceType": "Microsoft.Compute/availabilitySets"
+          },
+          {
+            "id": "/subscriptions/abf7ec88-8e28-41ed-8537-5e17766001f5/resourceGroups/deisonk8srg/providers/Microsoft.Storage/storageAccounts/00l7cttahzry3v6agnt0",
+            "resourceGroup": "deisonk8srg",
+            "resourceName": "00l7cttahzry3v6agnt0",
+            "resourceType": "Microsoft.Storage/storageAccounts"
+          }
+        ],
+        "id": "/subscriptions/abf7ec88-8e28-41ed-8537-5e17766001f5/resourceGroups/deisonk8srg/providers/Microsoft.Compute/virtualMachines/k8s-agentpool1-27785909-1",
+        "resourceGroup": "deisonk8srg",
+        "resourceName": "k8s-agentpool1-27785909-1",
+        "resourceType": "Microsoft.Compute/virtualMachines"
+      },
+      {
+        "dependsOn": [
+          {
+            "id": "/subscriptions/abf7ec88-8e28-41ed-8537-5e17766001f5/resourceGroups/deisonk8srg/providers/Microsoft.Storage/storageAccounts/00l7cttahzry3v6agnt0",
+            "resourceGroup": "deisonk8srg",
+            "resourceName": "00l7cttahzry3v6agnt0",
+            "resourceType": "Microsoft.Storage/storageAccounts"
+          },
+          {
+            "id": "/subscriptions/abf7ec88-8e28-41ed-8537-5e17766001f5/resourceGroups/deisonk8srg/providers/Microsoft.Network/networkInterfaces/k8s-agentpool1-27785909-nic-2",
+            "resourceGroup": "deisonk8srg",
+            "resourceName": "k8s-agentpool1-27785909-nic-2",
+            "resourceType": "Microsoft.Network/networkInterfaces"
+          },
+          {
+            "id": "/subscriptions/abf7ec88-8e28-41ed-8537-5e17766001f5/resourceGroups/deisonk8srg/providers/Microsoft.Compute/availabilitySets/agentpool1-availabilitySet-27785909",
+            "resourceGroup": "deisonk8srg",
+            "resourceName": "agentpool1-availabilitySet-27785909",
+            "resourceType": "Microsoft.Compute/availabilitySets"
+          },
+          {
+            "id": "/subscriptions/abf7ec88-8e28-41ed-8537-5e17766001f5/resourceGroups/deisonk8srg/providers/Microsoft.Storage/storageAccounts/00l7cttahzry3v6agnt0",
+            "resourceGroup": "deisonk8srg",
+            "resourceName": "00l7cttahzry3v6agnt0",
+            "resourceType": "Microsoft.Storage/storageAccounts"
+          }
+        ],
+        "id": "/subscriptions/abf7ec88-8e28-41ed-8537-5e17766001f5/resourceGroups/deisonk8srg/providers/Microsoft.Compute/virtualMachines/k8s-agentpool1-27785909-2",
+        "resourceGroup": "deisonk8srg",
+        "resourceName": "k8s-agentpool1-27785909-2",
+        "resourceType": "Microsoft.Compute/virtualMachines"
+      },
+      {
+        "dependsOn": [
+          {
+            "id": "/subscriptions/abf7ec88-8e28-41ed-8537-5e17766001f5/resourceGroups/deisonk8srg/providers/Microsoft.Storage/storageAccounts/00l7cttahzry3v6agnt0",
+            "resourceGroup": "deisonk8srg",
+            "resourceName": "00l7cttahzry3v6agnt0",
+            "resourceType": "Microsoft.Storage/storageAccounts"
+          },
+          {
+            "id": "/subscriptions/abf7ec88-8e28-41ed-8537-5e17766001f5/resourceGroups/deisonk8srg/providers/Microsoft.Network/networkInterfaces/k8s-agentpool1-27785909-nic-3",
+            "resourceGroup": "deisonk8srg",
+            "resourceName": "k8s-agentpool1-27785909-nic-3",
+            "resourceType": "Microsoft.Network/networkInterfaces"
+          },
+          {
+            "id": "/subscriptions/abf7ec88-8e28-41ed-8537-5e17766001f5/resourceGroups/deisonk8srg/providers/Microsoft.Compute/availabilitySets/agentpool1-availabilitySet-27785909",
+            "resourceGroup": "deisonk8srg",
+            "resourceName": "agentpool1-availabilitySet-27785909",
+            "resourceType": "Microsoft.Compute/availabilitySets"
+          },
+          {
+            "id": "/subscriptions/abf7ec88-8e28-41ed-8537-5e17766001f5/resourceGroups/deisonk8srg/providers/Microsoft.Storage/storageAccounts/00l7cttahzry3v6agnt0",
+            "resourceGroup": "deisonk8srg",
+            "resourceName": "00l7cttahzry3v6agnt0",
+            "resourceType": "Microsoft.Storage/storageAccounts"
+          }
+        ],
+        "id": "/subscriptions/abf7ec88-8e28-41ed-8537-5e17766001f5/resourceGroups/deisonk8srg/providers/Microsoft.Compute/virtualMachines/k8s-agentpool1-27785909-3",
+        "resourceGroup": "deisonk8srg",
+        "resourceName": "k8s-agentpool1-27785909-3",
+        "resourceType": "Microsoft.Compute/virtualMachines"
+      },
+      {
+        "dependsOn": [
+          {
+            "id": "/subscriptions/abf7ec88-8e28-41ed-8537-5e17766001f5/resourceGroups/deisonk8srg/providers/Microsoft.Compute/virtualMachines/k8s-agentpool1-27785909-0",
+            "resourceGroup": "deisonk8srg",
+            "resourceName": "k8s-agentpool1-27785909-0",
+            "resourceType": "Microsoft.Compute/virtualMachines"
+          }
+        ],
+        "id": "/subscriptions/abf7ec88-8e28-41ed-8537-5e17766001f5/resourceGroups/deisonk8srg/providers/Microsoft.Compute/virtualMachines/k8s-agentpool1-27785909-0/extensions/cse0",
+        "resourceGroup": "deisonk8srg",
+        "resourceName": "k8s-agentpool1-27785909-0/cse0",
+        "resourceType": "Microsoft.Compute/virtualMachines/extensions"
+      },
+      {
+        "dependsOn": [
+          {
+            "id": "/subscriptions/abf7ec88-8e28-41ed-8537-5e17766001f5/resourceGroups/deisonk8srg/providers/Microsoft.Compute/virtualMachines/k8s-agentpool1-27785909-1",
+            "resourceGroup": "deisonk8srg",
+            "resourceName": "k8s-agentpool1-27785909-1",
+            "resourceType": "Microsoft.Compute/virtualMachines"
+          }
+        ],
+        "id": "/subscriptions/abf7ec88-8e28-41ed-8537-5e17766001f5/resourceGroups/deisonk8srg/providers/Microsoft.Compute/virtualMachines/k8s-agentpool1-27785909-1/extensions/cse1",
+        "resourceGroup": "deisonk8srg",
+        "resourceName": "k8s-agentpool1-27785909-1/cse1",
+        "resourceType": "Microsoft.Compute/virtualMachines/extensions"
+      },
+      {
+        "dependsOn": [
+          {
+            "id": "/subscriptions/abf7ec88-8e28-41ed-8537-5e17766001f5/resourceGroups/deisonk8srg/providers/Microsoft.Compute/virtualMachines/k8s-agentpool1-27785909-2",
+            "resourceGroup": "deisonk8srg",
+            "resourceName": "k8s-agentpool1-27785909-2",
+            "resourceType": "Microsoft.Compute/virtualMachines"
+          }
+        ],
+        "id": "/subscriptions/abf7ec88-8e28-41ed-8537-5e17766001f5/resourceGroups/deisonk8srg/providers/Microsoft.Compute/virtualMachines/k8s-agentpool1-27785909-2/extensions/cse2",
+        "resourceGroup": "deisonk8srg",
+        "resourceName": "k8s-agentpool1-27785909-2/cse2",
+        "resourceType": "Microsoft.Compute/virtualMachines/extensions"
+      },
+      {
+        "dependsOn": [
+          {
+            "id": "/subscriptions/abf7ec88-8e28-41ed-8537-5e17766001f5/resourceGroups/deisonk8srg/providers/Microsoft.Compute/virtualMachines/k8s-agentpool1-27785909-3",
+            "resourceGroup": "deisonk8srg",
+            "resourceName": "k8s-agentpool1-27785909-3",
+            "resourceType": "Microsoft.Compute/virtualMachines"
+          }
+        ],
+        "id": "/subscriptions/abf7ec88-8e28-41ed-8537-5e17766001f5/resourceGroups/deisonk8srg/providers/Microsoft.Compute/virtualMachines/k8s-agentpool1-27785909-3/extensions/cse3",
+        "resourceGroup": "deisonk8srg",
+        "resourceName": "k8s-agentpool1-27785909-3/cse3",
+        "resourceType": "Microsoft.Compute/virtualMachines/extensions"
+      },
+      {
+        "dependsOn": [
+          {
+            "id": "/subscriptions/abf7ec88-8e28-41ed-8537-5e17766001f5/resourceGroups/deisonk8srg/providers/Microsoft.Network/loadBalancers/k8s-master-lb-27785909",
+            "resourceGroup": "deisonk8srg",
+            "resourceName": "k8s-master-lb-27785909",
+            "resourceType": "Microsoft.Network/loadBalancers"
+          }
+        ],
+        "id": "/subscriptions/abf7ec88-8e28-41ed-8537-5e17766001f5/resourceGroups/deisonk8srg/providers/Microsoft.Network/loadBalancers/k8s-master-lb-27785909/inboundNatRules/SSH-k8s-master-27785909-0",
+        "resourceGroup": "deisonk8srg",
+        "resourceName": "k8s-master-lb-27785909/SSH-k8s-master-27785909-0",
+        "resourceType": "Microsoft.Network/loadBalancers/inboundNatRules"
+      },
+      {
+        "dependsOn": [
+          {
+            "id": "/subscriptions/abf7ec88-8e28-41ed-8537-5e17766001f5/resourceGroups/deisonk8srg/providers/Microsoft.Network/virtualNetworks/k8s-vnet-27785909",
+            "resourceGroup": "deisonk8srg",
+            "resourceName": "k8s-vnet-27785909",
+            "resourceType": "Microsoft.Network/virtualNetworks"
+          },
+          {
+            "id": "/subscriptions/abf7ec88-8e28-41ed-8537-5e17766001f5/resourceGroups/deisonk8srg/providers/Microsoft.Network/loadBalancers/k8s-master-lb-27785909/inboundNatRules/SSH-k8s-master-27785909-0",
+            "resourceGroup": "deisonk8srg",
+            "resourceName": "k8s-master-lb-27785909/SSH-k8s-master-27785909-0",
+            "resourceType": "Microsoft.Network/loadBalancers/inboundNatRules"
+          },
+          {
+            "id": "/subscriptions/abf7ec88-8e28-41ed-8537-5e17766001f5/resourceGroups/deisonk8srg/providers/Microsoft.Network/networkSecurityGroups/k8s-master-27785909-nsg",
+            "resourceGroup": "deisonk8srg",
+            "resourceName": "k8s-master-27785909-nsg",
+            "resourceType": "Microsoft.Network/networkSecurityGroups"
+          }
+        ],
+        "id": "/subscriptions/abf7ec88-8e28-41ed-8537-5e17766001f5/resourceGroups/deisonk8srg/providers/Microsoft.Network/networkInterfaces/k8s-master-27785909-nic-0",
+        "resourceGroup": "deisonk8srg",
+        "resourceName": "k8s-master-27785909-nic-0",
+        "resourceType": "Microsoft.Network/networkInterfaces"
+      },
+      {
+        "dependsOn": [
+          {
+            "id": "/subscriptions/abf7ec88-8e28-41ed-8537-5e17766001f5/resourceGroups/deisonk8srg/providers/Microsoft.Network/networkInterfaces/k8s-master-27785909-nic-0",
+            "resourceGroup": "deisonk8srg",
+            "resourceName": "k8s-master-27785909-nic-0",
+            "resourceType": "Microsoft.Network/networkInterfaces"
+          },
+          {
+            "id": "/subscriptions/abf7ec88-8e28-41ed-8537-5e17766001f5/resourceGroups/deisonk8srg/providers/Microsoft.Compute/availabilitySets/master-availabilityset",
+            "resourceGroup": "deisonk8srg",
+            "resourceName": "master-availabilityset",
+            "resourceType": "Microsoft.Compute/availabilitySets"
+          },
+          {
+            "id": "/subscriptions/abf7ec88-8e28-41ed-8537-5e17766001f5/resourceGroups/deisonk8srg/providers/Microsoft.Storage/storageAccounts/l7cttahzry3v6mstr0",
+            "resourceGroup": "deisonk8srg",
+            "resourceName": "l7cttahzry3v6mstr0",
+            "resourceType": "Microsoft.Storage/storageAccounts"
+          },
+          {
+            "id": "/subscriptions/abf7ec88-8e28-41ed-8537-5e17766001f5/resourceGroups/deisonk8srg/providers/Microsoft.Storage/storageAccounts/l7cttahzry3v6mstr0",
+            "resourceGroup": "deisonk8srg",
+            "resourceName": "l7cttahzry3v6mstr0",
+            "resourceType": "Microsoft.Storage/storageAccounts"
+          }
+        ],
+        "id": "/subscriptions/abf7ec88-8e28-41ed-8537-5e17766001f5/resourceGroups/deisonk8srg/providers/Microsoft.Compute/virtualMachines/k8s-master-27785909-0",
+        "resourceGroup": "deisonk8srg",
+        "resourceName": "k8s-master-27785909-0",
+        "resourceType": "Microsoft.Compute/virtualMachines"
+      },
+      {
+        "dependsOn": [
+          {
+            "id": "/subscriptions/abf7ec88-8e28-41ed-8537-5e17766001f5/resourceGroups/deisonk8srg/providers/Microsoft.Compute/virtualMachines/k8s-master-27785909-0",
+            "resourceGroup": "deisonk8srg",
+            "resourceName": "k8s-master-27785909-0",
+            "resourceType": "Microsoft.Compute/virtualMachines"
+          }
+        ],
+        "id": "/subscriptions/abf7ec88-8e28-41ed-8537-5e17766001f5/resourceGroups/deisonk8srg/providers/Microsoft.Compute/virtualMachines/k8s-master-27785909-0/extensions/cse0",
+        "resourceGroup": "deisonk8srg",
+        "resourceName": "k8s-master-27785909-0/cse0",
+        "resourceType": "Microsoft.Compute/virtualMachines/extensions"
+      }
+    ],
+    "mode": "Incremental",
+    "outputs": {
+      "masterFQDN": {
+        "type": "String",
+        "value": "deisonk8s.westus.cloudapp.azure.com"
+      }
+    },
+    "parameters": {
+      "agentpool1Count": {
+        "type": "Int",
+        "value": 4
+      },
+      "agentpool1Subnet": {
+        "type": "String",
+        "value": "10.240.0.0/16"
+      },
+      "agentpool1VMSize": {
+        "type": "String",
+        "value": "Standard_D2_v2"
+      },
+      "apiServerCertificate": {
+        "type": "String",
+        "value": "LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUowekNDQjd1Z0F3SUJBZ0lRRU5NbFFZUkJ5Nmpxa1ZmTEU2WFhLREFOQmdrcWhraUc5dzBCQVFzRkFEQU4KTVFzd0NRWURWUVFERXdKallUQWVGdzB4TmpFeE1qUXdNREUzTlRSYUZ3MHhPREV4TWpRd01ERTNOVFJhTUJReApFakFRQmdOVkJBTVRDV0Z3YVhObGNuWmxjakNDQWlJd0RRWUpLb1pJaHZjTkFRRUJCUUFEZ2dJUEFEQ0NBZ29DCmdnSUJBTXdxQkR1bW9NREVDdlpaWFFqMXQ5N3REZlNvNzdpa0o1T2dzaGlrUnNnR3dHaEhOMVN3d1RhbGZ4K2MKc3phSVNITUg4OXNoMVN2SGlKaEV3N2hOUUhTME1Hd2lHU2NjY3B5R3RHWld5T3MrNjlGZjI1S2pqTDI4MlI2RQpmMjJiZ3VvRms0Q005K3NrY0JwMTRRVWVYYXN1UTZyd0VCWm14aVl0dzFjQ1RJanltM1ozQ215QTUvY0hPWTA5ClZtWlRoTkxqcldhVkYzMVo2YTMyYkVoSm9wZFp2RXRNSm5RTk5WM3hGS3lxOFlqaG9tY2xlWndxd1hVUDZMUEYKd25QK3dkODE0eTVHUzhsSHFGVnN6UVpxbmFqV0dwWCs3Y0EvMitTdkc5dzcwbEpZeWZraDNJMFBvc29oa09SRwpFTWVLaXorZHNLa2xJZm4wL1pCRVNHUTE1N2xYUGo0dE14Q3dQTnNrblBzVXkxYWJXNFhlU25jTFpXeXJuOGFCCnhCcmtBWURCQll2aDB2UEFvdTFaWStXNnRBNFAxWGt4SkhRRXpsTXZCcXlXN0hRVGxVV3VvSndrY0h3WXlha1YKMS9UL3JlM3dIYlhlSmlNSHAvOStrRFRWaGxvVG54TE9KSHdxSW5CZGNDMCt1YnlFZ2ZzSHhEblFzOU9KTVlHTwpKUU53TjV3WnVvcFRCbkpPY2VjbDUyelZkZXRLOTZwU0p0cGw5bjRjeWJEZkNramdJL0RhWDN4b0xlbi9zSXZpCmE2SzdSMXNYY2M0T05Md3lLMitDR1Q4dDlMRnk5WTdLQ3VhWVZNUUE3K2d1ZGJSeCtTNzlRZFRsdEpoNmhjeWIKbHlMRDNCRTlHeDdKNW9nWGZncWkzRVRFYUpGVmNUSzREQ0tqUHBOUTFhNFEyeUQ5QWdNQkFBR2pnZ1VtTUlJRgpJakFPQmdOVkhROEJBZjhFQkFNQ0JhQXdFd1lEVlIwbEJBd3dDZ1lJS3dZQkJRVUhBd0V3REFZRFZSMFRBUUgvCkJBSXdBRENDQk9zR0ExVWRFUVNDQk9Jd2dnVGVnaXRxYlhOck9ITmtaV2x6TG1GMWMzUnlZV3hwWVdWaGMzUXUKWTJ4dmRXUmhjSEF1WVhwMWNtVXVZMjl0Z2pCcWJYTnJPSE5rWldsekxtRjFjM1J5WVd4cFlYTnZkWFJvWldGegpkQzVqYkc5MVpHRndjQzVoZW5WeVpTNWpiMjJDS1dwdGMyczRjMlJsYVhNdVluSmhlbWxzYzI5MWRHZ3VZMnh2CmRXUmhjSEF1WVhwMWNtVXVZMjl0Z2l0cWJYTnJPSE5rWldsekxtTmhibUZrWVdObGJuUnlZV3d1WTJ4dmRXUmgKY0hBdVlYcDFjbVV1WTI5dGdpaHFiWE5yT0hOa1pXbHpMbU5oYm1Ga1lXVmhjM1F1WTJ4dmRXUmhjSEF1WVhwMQpjbVV1WTI5dGdpcHFiWE5yT0hOa1pXbHpMbU5sYm5SeVlXeHBibVJwWVM1amJHOTFaR0Z3Y0M1aGVuVnlaUzVqCmIyMkNKMnB0YzJzNGMyUmxhWE11WTJWdWRISmhiSFZ6TG1Oc2IzVmtZWEJ3TG1GNmRYSmxMbU52YllJbWFtMXoKYXpoelpHVnBjeTVsWVhOMFlYTnBZUzVqYkc5MVpHRndjQzVoZW5WeVpTNWpiMjJDSkdwdGMyczRjMlJsYVhNdQpaV0Z6ZEhWekxtTnNiM1ZrWVhCd0xtRjZkWEpsTG1OdmJZSWxhbTF6YXpoelpHVnBjeTVsWVhOMGRYTXlMbU5zCmIzVmtZWEJ3TG1GNmRYSmxMbU52YllJbmFtMXphemh6WkdWcGN5NXFZWEJoYm1WaGMzUXVZMnh2ZFdSaGNIQXUKWVhwMWNtVXVZMjl0Z2lkcWJYTnJPSE5rWldsekxtcGhjR0Z1ZDJWemRDNWpiRzkxWkdGd2NDNWhlblZ5WlM1agpiMjJDTEdwdGMyczRjMlJsYVhNdWJtOXlkR2hqWlc1MGNtRnNkWE11WTJ4dmRXUmhjSEF1WVhwMWNtVXVZMjl0CmdpbHFiWE5yT0hOa1pXbHpMbTV2Y25Sb1pYVnliM0JsTG1Oc2IzVmtZWEJ3TG1GNmRYSmxMbU52YllJc2FtMXoKYXpoelpHVnBjeTV6YjNWMGFHTmxiblJ5WVd4MWN5NWpiRzkxWkdGd2NDNWhlblZ5WlM1amIyMkNLMnB0YzJzNApjMlJsYVhNdWMyOTFkR2hsWVhOMFlYTnBZUzVqYkc5MVpHRndjQzVoZW5WeVpTNWpiMjJDS0dwdGMyczRjMlJsCmFYTXVjMjkxZEdocGJtUnBZUzVqYkc5MVpHRndjQzVoZW5WeVpTNWpiMjJDSldwdGMyczRjMlJsYVhNdWRXdHoKYjNWMGFDNWpiRzkxWkdGd2NDNWhlblZ5WlM1amIyMkNKR3B0YzJzNGMyUmxhWE11ZFd0M1pYTjBMbU5zYjNWawpZWEJ3TG1GNmRYSmxMbU52YllJcmFtMXphemh6WkdWcGN5NTNaWE4wWTJWdWRISmhiSFZ6TG1Oc2IzVmtZWEJ3CkxtRjZkWEpsTG1OdmJZSW9hbTF6YXpoelpHVnBjeTUzWlhOMFpYVnliM0JsTG1Oc2IzVmtZWEJ3TG1GNmRYSmwKTG1OdmJZSW5hbTF6YXpoelpHVnBjeTUzWlhOMGFXNWthV0V1WTJ4dmRXUmhjSEF1WVhwMWNtVXVZMjl0Z2lScQpiWE5yT0hOa1pXbHpMbmRsYzNSMWN5NWpiRzkxWkdGd2NDNWhlblZ5WlM1amIyMkNKV3B0YzJzNGMyUmxhWE11CmQyVnpkSFZ6TWk1amJHOTFaR0Z3Y0M1aGVuVnlaUzVqYjIyQ0NtdDFZbVZ5Ym1WMFpYT0NFbXQxWW1WeWJtVjAKWlhNdVpHVm1ZWFZzZElJV2EzVmlaWEp1WlhSbGN5NWtaV1poZFd4MExuTjJZNElrYTNWaVpYSnVaWFJsY3k1awpaV1poZFd4MExuTjJZeTVqYkhWemRHVnlMbXh2WTJGc2doWnJkV0psY201bGRHVnpMbXQxWW1VdGMzbHpkR1Z0CmdocHJkV0psY201bGRHVnpMbXQxWW1VdGMzbHpkR1Z0TG5OMlk0SW9hM1ZpWlhKdVpYUmxjeTVyZFdKbExYTjUKYzNSbGJTNXpkbU11WTJ4MWMzUmxjaTVzYjJOaGJJSWZhbTF6YXpoelpHVnBjeTRxTG1Oc2IzVmtZWEJ3TG1GNgpkWEpsTG1OdmJZY0VDdkQvQlljRUNnQUFBVEFOQmdrcWhraUc5dzBCQVFzRkFBT0NBZ0VBYyt2MVdhYXV1Y3RvCmFpQkFNZ0s5dHRpV25wZlVTTndtOTdsUkFLL3p3UzlZWUpwdVY1RGZkb0dDWk1DMGZzSytFM1NsOG1lK1BVcjAKKzY0NGxpamxudkFTaThPSTQxWlF1d2xVL0dUbmRkOTQyNEpIT2xjb2VGWGducm1sa1hDdkM3WXVRd2xjb2pCdgpPbUVBdGpWRzNrSEIvSFNwTVd5d3I5SW9pQ3QxSjFkcG5ZaE9xT2J0MXB6S0w1cUJhczhiYS9JTUs0ZUxCM211Ck4rWTBESVBMWDRDekVVTzB1R2NYN0ZzNlFnVE82WUxEVWdCRVlnR05xeFFvdW9TUUg4RE0yZUZlN0R1YVR6bjUKR1E3bmhxU1JPekR5ajJROFdHZjRXSjRTV3NUU05QenZrdFR5azZyQjBuU09BeUxHSVllcnZ1L3pvNE1IeGpmbwoxREJUbjFiU1pwUmpTZU1TaEFSaFM2TE5zOHBGVXptNzUyUVFlNTFXa242bjcrdGpBcVdvMVI4Q05GUXlWTEsyCjcvRlBPeVNWN2Q0d0tuekg3Tml2YS9QYTRvTEhwMm5ZUnpLOWg1Nlh0dTBlR2tjRFE0THBPNXgwUGdSeDhlbEoKSExCc1FwT1g5TEIxMkFuOVJJZjVMWnlDV1ZzWnYwc1RtSTY1NG5QYXY5d0ViMVR1MGh3RVhZMGp2T202SzQ3cQpxYVhzSk5wMHVGdkxtNjdRNHdmQ1ZhNGJ6cEdvY3RqaTdQMjJiVVlwYWdka0VSdit0OWpRdkpTSVZkRmx2NnByCkFNSFZnbU1MNVFtUTJ6YWhHTThnK0pvVCtEVC9YMUlKblEyMGNrT1czU3RLMWhtTHBKZHZxeWRaLzNjUERqWWwKUnVISXY2Tm94RmdSaUlqeldFV1RYK29KQkd1WnNhUT0KLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLQo="
+      },
+      "apiServerPrivateKey": {
+        "type": "SecureString"
+      },
+      "caCertificate": {
+        "type": "String",
+        "value": "LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUV5RENDQXJDZ0F3SUJBZ0lSQU12YVpQMFlnUWJNVGcydWhpakl0Z1l3RFFZSktvWklodmNOQVFFTEJRQXcKRFRFTE1Ba0dBMVVFQXhNQ1kyRXdIaGNOTVRZeE1USTBNREF4TnpRMldoY05NVGd4TVRJME1EQXhOelEyV2pBTgpNUXN3Q1FZRFZRUURFd0pqWVRDQ0FpSXdEUVlKS29aSWh2Y05BUUVCQlFBRGdnSVBBRENDQWdvQ2dnSUJBTFIvCjVBRnQ5eEFDdi8xL2tBRStxNVFPU2hMRC9hOWZmUkp4S2ZGR1BCSyszS1l5KzRGUVlVdDJDaFNyeTd2Z1hSS2MKSnhHYlAzcVpIazJEeFlKNnNoTFFiblpOZlY2YW16UG5obzQ0WVM3ODdCVHFhV244MmZXT3FsdGl5bWdENjYxbgpVTXJhVE1iK2FKS2FpYUVac3JIUExQN2ZMd1BQdlZiUHJ6SDFIbjloc3lKUlM2Y3lIQ2MwZkkyblh2V2ZaMTlPCmFRdGI0RmgrdVVSVXFoRGlkVjJ5NGxRK1lYcjhvVVJUdWxYU0o0Y1pCbE4wZ1dHNVJhbDM5RFdlNVI2TjgwSmcKdWppWmUrMndjeWV6TTVPR0hMZkYxVHRHOFhGbkZjZjE3ODJoa2NqUUMyN2RRT29mNmF0S0RtR3lKaUplNEU0awp3a29uL3A5RUE1T1E5VDRWQlJEdm5HWVluUnczSkd1VUhZTTFhWUtna3ZCTXFXSy8rUXRqNm54ejVWSG1kWTRLCnRpU1FkUmo0emMwKzVSMWlmNG9zS1J6TElhUGovSi9oVFIrenRyVEswdDhFMDN6eEpRRXhuWFRhbW9iYWFPTEYKR1hTOU8rVUhpRitKb1JKMlFOYnFXTHNnbU1pNjg4YzNEaWpqRUlpZysrUEs1Sm0rM2JsN3pXbXh5WDFJREVpcgpDS21TcjVoeXBrdHQ4U0JzcUEyL0lrL2h5NGFHZjdOWEFpWU5Velg2OXFCTnBWZG5XS0RaSGlEdnFsalMvVHJRClNwSWFob3ZUQWpWOU91TDhCR2RMTGRkUmVNanlhMGJvZDVqM3pjWUZyRitXVDU4YnZtVmVWekhCS2dvbkhXdVIKZkwwQkI0TnJGcGw5V09JSmxuc2ZHQzZPTUxHcm1ISUhQQkVlSnl3dkFnTUJBQUdqSXpBaE1BNEdBMVVkRHdFQgovd1FFQXdJQ3BEQVBCZ05WSFJNQkFmOEVCVEFEQVFIL01BMEdDU3FHU0liM0RRRUJDd1VBQTRJQ0FRQ0I4RjlqCngwN1F2Yms0UnVEa2g4aXowZGkyV3B6OTE1MFZSa3d0U25MUGtINUQzQ0dYc1N2RHFBWHQxbnRTT25zVHFNQjgKb0dTakNxeDBsRWgrY1g0Z0ZwQjB2VGxpT3FUcXl4SUpGdG00eXpYNDRad2xoUFNGdUJwYStGSlhRRHFOS1ozRAplbHBBa3FYY21xQlZiaC9SOVd4dGU1QlRsWmNPNzlDZE04K0dUTTh4VmVrdS92UEgxejl2UVpoZFlWbGlaYW1qCk45UXBSVGNhTy9tbkY0NGw0eWZUMjI1ME5DSTZKaWdQNkxqNFNLTVhMRFQyeURpUEp2OCtWcU1xc1Z3aVVsTVAKSTZ2L0JSVWFoc210UHdiVUNnZXpieTNLYlZrTzR6dldabVQ4QmJFdTN5RWVmczNzVnNtM0ZHNjYvTU5jUlVvRQpsV1ZhOVQvaXN5WUdicEJTVTJmRDFjbkNlOVZodG00Qk42T1lJdjJ2M0pyb0FJZmRoU3Nackpya3VuaExsZWtoCnBiWTcrN0VuMi9zTFcvTittN0Rzd2doUFk1cktsS1RxcTZRdTU0WWpuS1R4UjJOc29lOTNLMlZVMUJadXhFL3AKZktUaUEvcDJZcnoycUh3NVh0ZCtiWUF5V3ZTWjZ2eVFDVGczb2tIOHVCdm5iRUhCYlAyK3ZwUzl5WGcxcmpsZApLK1d3T3lKOUZnTnV2bFZUTWhGUUtzQXRLNHJnU2gvV2dadXhFaGV5M1AxaXVEWXdoTXhOTHlBbDAvc08wWUlMCklFYVZVNkFMaTJIQ3ljVGRGaWhENjhsN0tRUmhtUVd3RlpLZjRQZ3dMMldDaTZrVkJ0S293UzI0UTRSZTgwczIKSFpicmJDSXpQSEI0NVlVemxrZDRXZnc1VEpxUEpYRFMrM0dua0E9PQotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg=="
+      },
+      "clientCertificate": {
+        "type": "String",
+        "value": "LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUUzakNDQXNhZ0F3SUJBZ0lSQVBkdW1BN1dYSGEveWgxOXJ2OUxTc1V3RFFZSktvWklodmNOQVFFTEJRQXcKRFRFTE1Ba0dBMVVFQXhNQ1kyRXdIaGNOTVRZeE1USTBNREF4TnpVMFdoY05NVGd4TVRJME1EQXhOelUwV2pBUgpNUTh3RFFZRFZRUURFd1pqYkdsbGJuUXdnZ0lpTUEwR0NTcUdTSWIzRFFFQkFRVUFBNElDRHdBd2dnSUtBb0lDCkFRQzE2Z2k2SW5KTHR3SC9PbVlQVGJxdGlyVUVGRkNkUkZxbktJeHFvL2FrK0JONzh4R0pMOXVsYXFDamJXckUKL0Roc0ZtQ3ZuSWxxbG9Qc2tZc2xYMVlXSnJNSG1jdWN1QXlIUjFGWUg4MXM3cTdodElyN1BzV241aXVoejl4Rwo0Yjdxa3piY1cvM0thMy8vc3pvcFA1b0VnRlg1RmxUSVBpd1Y4a2g0ZVlrOW52dksrbVQvVE1jS1FGNWFhTTZDCnU1WjZrRDB0YURxSGozRDlhN25wV3B1eFJtM0pta2I1SU5nTllaK1A5N1l4NUNsYk9kd2F6ZHpQSGNadGFwNHQKcko2R3h3NFB1MFN3b051REE1bWFhSnlteDFUUXNFaHJqN3Q0TW5kbURoazBoNWpSZFlWR1Fod25YRU13R3JFOApnYTdOZWgvYlE2dSswYTNiRkkxNG5KUkM3UTBDNUJDV3kxRks0WVBqdThHMUw4a2NUMHpzc0pmaEVUOTJ4MzJnCm51NTh6dHhBNTVOTWR4NUNBYVhYc3RHQUZ3dzFtQXRJdnZtdTBVcGcxQm5PY083K25KVlBxaEltb05ReExhd1gKUFRmVWxkQTZ2dkZydVhTY1l6Sit0dnN4dEtFOElKMnVoZExRSGNYeTNhdzBzQWlPMUl4a0Z0Y2lHcW5jTnA2cwpZa1g0Ykt2V21ia1BSckJhUVBMMXA4YmNrQTZEb1VPRU84cjczOU4zTVYzVFJsWmJjUlUvOHV0VzFYVjZ3clYyCjcxQUordmpYYzM3SzhZZ2Y3NkVSVjFZMVlsZHhQdnpoMWNzTlBucVZpa1QwWlpoc2FwLzA5MEhsTndZNkVCVjMKbk5ham80R0JWbUcwV0VZc0wxSG5rV1hBeXMxLytlck43T2lPeFQzd2k4SDZHUUlEQVFBQm96VXdNekFPQmdOVgpIUThCQWY4RUJBTUNCYUF3RXdZRFZSMGxCQXd3Q2dZSUt3WUJCUVVIQXdJd0RBWURWUjBUQVFIL0JBSXdBREFOCkJna3Foa2lHOXcwQkFRc0ZBQU9DQWdFQUllSVBRS0JndW5BSFdjMEFiVzVVWXJTSWRoSmVJMjVkYWVKVk53VDgKVFAyUE45TTFvclMvMDJ6Vk5qK2o0aHFqK2MyQ2w5dDFOOVArSk5lOXZBWWcrR3hFMlo3c2VjR01IVmYwTzVINApxYnBQZVJXQTY1TTVFVzlxU1o0bFY2M1g4MElod1B6ZU5hRDk0aGovSXFhZ3BqUFliOEtKZE9QNC9teXR1M3RQCjVFTHFJeS8zdEwyRUUxY1U2WDNhdm1Yc0wxMHR0ekRYQ1BlK21QdmR0MS82TkNQRTZQUWMxcm1WOE01bThtREIKVHBDbzBWNDc3bWlqRDAxdGlXbkxQUnJkSVhOOGdueFJMOWZkL2pIb0VVTmFGT0FJNlNYUTQ3VWcxYjZuV3M3dQppaFRuUlEzNExhK0tqcjFrd3NYbHlXN0NXZ1RPaHZ6MjJqTDZoMFFSeU5sblNpODF2MXRTYnZ1ak01MkdqSmJPClZreVhXbWErY2RVcEcvWUtQZlNSWTFOQStqZmk0NzEyVVIvd1Rhc0M0YVJXbEtzcDZCMVVYZFZwdDRYVTZnZVAKS1huWkk0MDNpblQ5ZUNQZUo0c2JmeGxLNk5sK2xqdDl1RENObzVReUlMM0IzZHJmZGlrRjVzZTdWNnEzTVZWRQpLWHJmWEpLUFFpU1VYWW5qaWNGOFQ0Qk9XZHJCZndYdEo1L3o5cCtrNVNZMGt0a2xvUGdWZlpuZkEvZzJPaUpCCm02cnF6d3A2NjRDQjhyUktXSXdOY0FpaUM2bCtDWEd5Vk1ISHRGbzhFQWtJV3lmY0cxVW85YTJlcEZmc1RYYmYKSWhtVWxNdVJ0Znd3cmM4UTJoY0ppVmdIOVVWMllHSC8xcTU3cVFyd01zcWNTQmZKQUgxTnJpdGxxc1ZjMXhlaApPSnM9Ci0tLS0tRU5EIENFUlRJRklDQVRFLS0tLS0K"
+      },
+      "clientPrivateKey": {
+        "type": "SecureString"
+      },
+      "firstConsecutiveStaticIP": {
+        "type": "String",
+        "value": "10.240.255.5"
+      },
+      "kubeConfigCertificate": {
+        "type": "String",
+        "value": "LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUUzakNDQXNhZ0F3SUJBZ0lSQUp3NlRGRVJPUm5UY2Y3aVQ2TE9EOGd3RFFZSktvWklodmNOQVFFTEJRQXcKRFRFTE1Ba0dBMVVFQXhNQ1kyRXdIaGNOTVRZeE1USTBNREF4TnpVMFdoY05NVGd4TVRJME1EQXhOelUwV2pBUgpNUTh3RFFZRFZRUURFd1pqYkdsbGJuUXdnZ0lpTUEwR0NTcUdTSWIzRFFFQkFRVUFBNElDRHdBd2dnSUtBb0lDCkFRQzdvdkRiSDIvZCtqbVdqcDY2aTNNbGhMcnQ2Z05Sc0xVVmRMaWM0cjNXcHpNTlE4YSt2bzJGM1YyNFVMNDMKNFVxQ2M5K1RPSDJiWUkxMkV6OFprcVdtREZ6TERuK2JlejVRUElZZko2T0R0dytCOXhUVk8xWHh3RWtYUUR0Mwp5eXdlc3EwVGdzWkhZRTJna09pZHYwUnpiYmNQNlF3Zm5MTHM5cXluRGJGaDZlSnJMVTJwT3doM0RLcURtZFJXClhDVEk5MEVURm5MM3h3NklVMmxiMU5rSTUxUzRiR1ppeFp4YWFEd2ZNN1ZtUG5UUjEwUk9ya2o1bjZJQ1JVRDAKQ3ozd2Z1eEpETHQvYitPdDFXcmo4ZVJyNUZsK2psSGdhenF2aldNeHdydUh5UjcycGU2V1drZDJsYS80eWtUZwpoaHFiSUE1RWd5SGsyWEZGWUNTelc4aDBhbmhBbHFob2hoTjR1QUhXZ0o5eWJ1YVNQOVhrUnZJY1lkQ2RRYUJUCkZRRUdWQ0NOdFpEZG81WU1rd04vNDlpcS8rcFgzYVVzeE9FcFN3MDA2eFpkVU1hNnlsbnp3Y1pOL3FJTVBOQjYKUFlZcHdCVzZVdXdJRWtyVDFnTkhpT3M5NklkaWZIcGFQZllEWWw5cmdzc1NTaVpTc1QzQjl4TEVjeElNamRCWApOVS9acjVCNzlPdnY4b1U5NWJYYWxkNE5SNmRzaG9xRDQvbytDTnppak1iUTNGK01mMXFUeTBZYXZCSVhOTGFRCmhyT2wvOUNINXVQU1I4ZFhEWW02VGFTS2JidERISitXRGx0MjdzM0F2RG5BVThQY3lxc2E1T3gzdnZCdmpsYWEKUXVDUlhEUWdZK3l3NlQ0eDY3Tm1oc0dQYjRHRFUyRFBGWHBia0ZtNk13ZFAyUUlEQVFBQm96VXdNekFPQmdOVgpIUThCQWY4RUJBTUNCYUF3RXdZRFZSMGxCQXd3Q2dZSUt3WUJCUVVIQXdJd0RBWURWUjBUQVFIL0JBSXdBREFOCkJna3Foa2lHOXcwQkFRc0ZBQU9DQWdFQURoRFRTRnpmWHpBOS9MU0VlSW1TUWRzeVV0V0Vra0FyOGpkWkJldTQKWFloT2FmWkJiZlpHbVJmZ2JEZkFjQjhUMlVvek1CeVVZaytyMVJpMFNjbzl1ZlA4Y2NORytnNVFwNVo0ODJEUQo3ZFRjeG5iSUd3UnZrRHZ5bG9EelMySXJ2YXVGNGVIek9TQTJ2enkyUGRMT2EwbkNzdWF4YWFMRHlmYUt0bWZ0CjE4WGo3RjFqQWJTZlB6UEV1ekNGRzFOa3NCMG9JSTgzWnVrMjZZZkh5UHdIWktQeERCa2JBNXFzbkRNelJ2czIKd2FzKzJ3ZTV1WmwxZmordTFpNGhGcjJOU1RRR3Y1bjVER3c3Uk1XMFlhY3Q4QXlHTzB3L1JVU2djNjM3VUlYUgpzQWJaQkRkQVAxbE5ML2lMUm1YSkxVQkFXMVpQdUxqSTlhQjZyRGdUTTJoRkY5WHBiUWp4N0NscDAzbDVTaWNDCm55RlpZV3lad2w2S2tySjk2bWRTb0lNbkhPTDdCbTY4RU55eWg4ZW42UkFHcHBuVWFKamt0M3ZYQnpXdGZWamMKbHBrSWtRb1NTUHp5YjNsWjlaVGdudVB6Nlk5eUFNMDE1aHFwcXlEL0J3YktlZDZYV3JyVlJua1NLelRDbHdieQo3SVZJOWNHdjdMVmJQeUs4RTZlcUxicGZPcmdZZEdHbUI3Zm9RYTBrdHpMMnFMdHBOWjY3WjNwRGFkeGZKRHpBClZtQ1pscTJUOW9GOFNTSVA4cXhDN29jNHNRWkpIanpNSk9yTzNDMnhiS2czR3E0amtGSEFjNUlPeCsrQTZQVUIKSGE0d0RUcjRacUJNUlpNbm1jbVppT3dFMHd4dUNZVTZNMTNNbnhvaXUrOWtjdmVkbThIRmNsUnRlNVJ1ZXpnVwoxZkk9Ci0tLS0tRU5EIENFUlRJRklDQVRFLS0tLS0K"
+      },
+      "kubeConfigPrivateKey": {
+        "type": "SecureString"
+      },
+      "kubectlVersion": {
+        "type": "String",
+        "value": "v1.4.5"
+      },
+      "kubernetesHyperkubeSpec": {
+        "type": "String",
+        "value": "gcr.io/google_containers/hyperkube-amd64:v1.4.5"
+      },
+      "linuxAdminUsername": {
+        "type": "String",
+        "value": "kadmin"
+      },
+      "masterEndpointDNSNamePrefix": {
+        "type": "String",
+        "value": "deisonk8s"
+      },
+      "masterSubnet": {
+        "type": "String",
+        "value": "10.240.0.0/16"
+      },
+      "masterVMSize": {
+        "type": "String",
+        "value": "Standard_D2_v2"
+      },
+      "nameSuffix": {
+        "type": "String",
+        "value": "27785909"
+      },
+      "servicePrincipalClientId": {
+        "type": "SecureString"
+      },
+      "servicePrincipalClientSecret": {
+        "type": "SecureString"
+      },
+      "sshRSAPublicKey": {
+        "type": "String",
+        "value": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC5GaHxY8t3eNRt6HNkiRGhneNPs1m0o2TtXmVUFyqPn5x5k/PUnJib0PSS/0LL8HrkKuDdVlEIkojROya9OD5cwoe/xfjxjFXhNqsP8F/NY57b6M1KGpX1cq8zv3M2HTQWwnmGwImG3/UM7qbi/4Z5EZ3lCngEfYsio6cmtpb3EI/A8WAAHj5SD0EgYajznmkCiEn2ls7Nf94t8PdXxZUpCuHagpG+8T61ysbO/qDDTvw2c3LHttfOtPLQrKwA/k6n9kHDTyDZ22KUJDD6s0TvzqQhsYVGo640Y7+qkgUy+vsvzFDOhShjrMEY+g6XbQDpTt3KaDfHGKpYwBo6UumT jims@azuredork"
+      }
+    },
+    "parametersLink": null,
+    "providers": [
+      {
+        "id": null,
+        "namespace": "Microsoft.Compute",
+        "registrationState": null,
+        "resourceTypes": [
+          {
+            "aliases": null,
+            "apiVersions": null,
+            "locations": [
+              "westus"
+            ],
+            "properties": null,
+            "resourceType": "availabilitySets"
+          },
+          {
+            "aliases": null,
+            "apiVersions": null,
+            "locations": [
+              "westus"
+            ],
+            "properties": null,
+            "resourceType": "virtualMachines"
+          },
+          {
+            "aliases": null,
+            "apiVersions": null,
+            "locations": [
+              "westus"
+            ],
+            "properties": null,
+            "resourceType": "virtualMachines/extensions"
+          }
+        ]
+      },
+      {
+        "id": null,
+        "namespace": "Microsoft.Storage",
+        "registrationState": null,
+        "resourceTypes": [
+          {
+            "aliases": null,
+            "apiVersions": null,
+            "locations": [
+              "westus"
+            ],
+            "properties": null,
+            "resourceType": "storageAccounts"
+          }
+        ]
+      },
+      {
+        "id": null,
+        "namespace": "Microsoft.Network",
+        "registrationState": null,
+        "resourceTypes": [
+          {
+            "aliases": null,
+            "apiVersions": null,
+            "locations": [
+              "westus"
+            ],
+            "properties": null,
+            "resourceType": "virtualNetworks"
+          },
+          {
+            "aliases": null,
+            "apiVersions": null,
+            "locations": [
+              "westus"
+            ],
+            "properties": null,
+            "resourceType": "networkSecurityGroups"
+          },
+          {
+            "aliases": null,
+            "apiVersions": null,
+            "locations": [
+              "westus"
+            ],
+            "properties": null,
+            "resourceType": "routeTables"
+          },
+          {
+            "aliases": null,
+            "apiVersions": null,
+            "locations": [
+              "westus"
+            ],
+            "properties": null,
+            "resourceType": "loadBalancers"
+          },
+          {
+            "aliases": null,
+            "apiVersions": null,
+            "locations": [
+              "westus"
+            ],
+            "properties": null,
+            "resourceType": "publicIPAddresses"
+          },
+          {
+            "aliases": null,
+            "apiVersions": null,
+            "locations": [
+              "westus"
+            ],
+            "properties": null,
+            "resourceType": "networkInterfaces"
+          },
+          {
+            "aliases": null,
+            "apiVersions": null,
+            "locations": [
+              "westus"
+            ],
+            "properties": null,
+            "resourceType": "loadBalancers/inboundNatRules"
+          }
+        ]
+      }
+    ],
+    "provisioningState": "Succeeded",
+    "template": null,
+    "templateLink": null,
+    "timestamp": "2016-11-24T00:26:28.144455+00:00"
+  },
+  "resourceGroup": "deisonk8srg"
+}
