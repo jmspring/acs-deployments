@@ -17,23 +17,23 @@ In this write up, the creation and deployment of the infrastructure for the foll
 outline will be deployed:
 
 ```
-<Data Source> --> [Ingest] --> (Message into **Processing Queue**)
+<Data Source> --> [Ingest] --> (Message into Processing Queue)
                      |
-                     --> (Data into **Blob Store**)
+                     --> (Data into Blob Store)
 
 
-(**Processing Queue**) --> [Data Analyzer] --> (Message into **Notification Queue**)
+    (Processing Queue) --> [Data Analyzer] --> (Message into Notification Queue)
                             ^      |
-         (**Blob Store**) --|      --> (Data Analysis Output into **Analysis Event Hub**)
+             (Blob Store) --|      --> (Data Analysis Output into Analysis Event Hub)
 
 
-(**Notification Queue**) --> [Notifier]
+(Notification Queue) --> [Notifier]
 ```
 
 The components in the diagram translate as follows:
 
-  - <Data Source> represents an external device from which data is received
-  - [Ingest], [Data Analyzer], and [Notifier] are services running within Deis Workflow
+  - **<Data Source>** represents an external device from which data is received
+  - **[Ingest]**, **[Data Analyzer]**, and **[Notifier]** are services running within Deis Workflow
   - **Processing Queue** is an [Azure Service Bus Queue](https://docs.microsoft.com/en-us/azure/service-bus-messaging/service-bus-fundamentals-hybrid-solutions#queues)
     used for notifying the the Data Analyzer of the next set of data to be processed.
   - **Notification Queue** is also an Azure Service Bus Queue.  This one is used to let Notifier know when, by analysis, the need for a notification needs to be sent.
@@ -70,35 +70,35 @@ images.  So, the names chosen below will reflect on that.
 
 The first thing needing defining is the Resource Group.  The Resource Group will be created using the Azure CLI.  The values needed:
 
-  - Resource Group Name:  imagepipelinerg
-  - Location:  West US (for the CLI, the value is `westus`)
+  - Resource Group Name:  `imagepipelinerg`
+  - Location:  `West US` (for the CLI, the value is `westus`)
 
 For the Azure Storage Account, the CLI will also be used to create the Storage Account.  There are four values needed:
 
-  - Resource Group Name:  imagepipelinerg (**as above**)
-  - Location:  West US (**as above**)
-  - Storage Account Name:  imagepipelinestore
-  - Storage Account SKU:  Standard_LRS (standard, locally redundant storage)
+  - Resource Group Name:  `imagepipelinerg` (**as above**)
+  - Location:  `West US` (**as above**)
+  - Storage Account Name:  `imagepipelinestore`
+  - Storage Account SKU:  `Standard_LRS` (standard, locally redundant storage)
 
 For the Azure Service Bus Queues, one of the existing [Azure Quickstart Templates](https://github.com/Azure/azure-quickstart-templates/tree/master/101-servicebus-queue).  If you examine
 the [template deployment parameters](https://github.com/Azure/azure-quickstart-templates/blob/master/201-servicebus-create-queue/azuredeploy.parameters.json) the needed parameters (plus arguments for the CLI deployment command):
 
-  - Resource Group Name:  imagepipelinerg (**as above**)
+  - Resource Group Name:  `imagepipelinerg` (**as above**)
   - Deployment Names:
-    - imagepipelineproc-dep (for the **Processing Queue**)
-    - imagepipelinenot-dep (for the **Notification Queue**)
-  - Service Bus Namespace:  imagepipelinesbus
+    - `imagepipelineproc-dep` (for the **Processing Queue**)
+    - `imagepipelinenot-dep` (for the **Notification Queue**)
+  - Service Bus Namespace:  `imagepipelinesbus`
   - Service Bus Queue Names:
-    - imagepipelineprocq (for the **Processing Queue**)
-    - imagepipelinenotq (for the **Notification Queue**)
+    - `imagepipelineprocq` (for the **Processing Queue**)
+    - `imagepipelinenotq` (for the **Notification Queue**)
 
 For creating the Azure Event Hub, another [quickstart template](https://github.com/Azure/azure-quickstart-templates/tree/master/201-event-hubs-create-event-hub-and-consumer-group) is used.  The [parameters](https://github.com/Azure/azure-quickstart-templates/blob/master/201-event-hubs-create-event-hub-and-consumer-group/azuredeploy.parameters.json) required (plus arguments for the CLI deployment command) are:
 
-  - Resource Group Name:  imagepipelinerg (**as above**)
-  - Deployment Name:  imagepipelineeh-dep
-  - Event Hub Namespace:  imagepipelineehns
-  - Event Hub Name:  imagepipelineeh
-  - Event Hub Consumer Group:  imagepipelineanalyze
+  - Resource Group Name:  `imagepipelinerg` (**as above**)
+  - Deployment Name:  `imagepipelineeh-dep`
+  - Event Hub Namespace:  `imagepipelineehns`
+  - Event Hub Name:  `imagepipelineeh`
+  - Event Hub Consumer Group:  `imagepipelineanalyze`
 
 ## Create A Resource Group
 
