@@ -60,6 +60,7 @@ The steps for the deployments are as follows:
   - Create the Azure Storage Account for storing blobs
   - Create the Azure Service Bus Queues
   - Create the Azure Event Hub
+  - Retrieve Azure Service Bus and Azure Event Hub Credentials
 
 For a tutorial of what Azure Templates are and how to work with them, please take a look [here](https://docs.microsoft.com/en-us/azure/azure-resource-manager/resource-manager-template-walkthrough).  
 
@@ -83,6 +84,7 @@ For the Azure Storage Account, the CLI will also be used to create the Storage A
 For the Azure Service Bus Queues, one of the existing [Azure Quickstart Templates](https://github.com/Azure/azure-quickstart-templates/tree/master/101-servicebus-queue).  If you examine
 the [template deployment parameters](https://github.com/Azure/azure-quickstart-templates/blob/master/201-servicebus-create-queue/azuredeploy.parameters.json) the needed parameters (plus arguments for the CLI deployment command):
 
+  - Deployment Template:  `https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/101-servicebus-queue/azuredeploy.json`
   - Resource Group Name:  `imagepipelinerg` (**as above**)
   - Deployment Names:
     - `imagepipelineproc-dep` (for the **Processing Queue**)
@@ -94,6 +96,7 @@ the [template deployment parameters](https://github.com/Azure/azure-quickstart-t
 
 For creating the Azure Event Hub, another [quickstart template](https://github.com/Azure/azure-quickstart-templates/tree/master/201-event-hubs-create-event-hub-and-consumer-group) is used.  The [parameters](https://github.com/Azure/azure-quickstart-templates/blob/master/201-event-hubs-create-event-hub-and-consumer-group/azuredeploy.parameters.json) required (plus arguments for the CLI deployment command) are:
 
+  - Deployment Template:  `https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/201-event-hubs-create-event-hub-and-consumer-group/azuredeploy.json`
   - Resource Group Name:  `imagepipelinerg` (**as above**)
   - Deployment Name:  `imagepipelineeh-dep`
   - Event Hub Namespace:  `imagepipelineehns`
@@ -120,4 +123,411 @@ jims@dockeropolis:~$ az resource group create \
   "tags": null
 }
 ```
+
+## Create the Storage Account
+
+The Storage Account is also created using the Azure CLI.  With the values from above, the process is as follows:
+
+```bash
+jims@dockeropolis:~$ az storage account create \
+> --location="westus" \ 
+> --name="imagepipelinestore" \
+> --resource-group="imagepipelinerg" \
+> --sku="Standard_LRS"
+{
+  "accessTier": null,
+  "creationTime": "2016-12-01T21:36:25.900614+00:00",
+  "customDomain": null,
+  "encryption": null,
+  "id": "/subscriptions/04f7ec88-8e28-41ed-8537-5e17766001f5/resourceGroups/imagepipelinerg/providers/Microsoft.Storage/storageAccounts/imagepipelinestore",
+  "kind": "Storage",
+  "lastGeoFailoverTime": null,
+  "location": "westus",
+  "name": "imagepipelinestore",
+  "primaryEndpoints": {
+    "blob": "https://imagepipelinestore.blob.core.windows.net/",
+    "file": "https://imagepipelinestore.file.core.windows.net/",
+    "queue": "https://imagepipelinestore.queue.core.windows.net/",
+    "table": "https://imagepipelinestore.table.core.windows.net/"
+  },
+  "primaryLocation": "westus",
+  "provisioningState": "Succeeded",
+  "resourceGroup": "imagepipelinerg",
+  "secondaryEndpoints": null,
+  "secondaryLocation": null,
+  "sku": {
+    "name": "Standard_LRS",
+    "tier": "Standard"
+  },
+  "statusOfPrimary": "Available",
+  "statusOfSecondary": null,
+  "tags": {},
+  "type": "Microsoft.Storage/storageAccounts"
+}
+```
+
+### Storage Account Credentials
+
+A piece of information that will be needed by the applications we will deploy is the credentials for accessing the Storage Account.  To retrieve tthe Storage Account Keyso using the Azure CLI, the process is:
+
+```bash
+jims@dockeropolis:~$ az storage account keys list --name="imagepipelinestore" --resource-group="imagepipelinerg"
+{
+  "keys": [
+    {
+      "keyName": "key1",
+      "permissions": "FULL",
+      "value": "uPtltDA82dIm8JRWyvE5Tpu/uXB3aRFB5va7kssVj4huojgXFw6coCeTZ3ExgzwN9AHYzWCRKspgpP9RxfVCw=="
+    },
+    {
+      "keyName": "key2",
+      "permissions": "FULL",
+      "value": "dFRh/oayuFkl6myNvfT4+LRTd0Ctg/Fp4d+s9C0y0t/sShl0eqgE1gqeqI1jYf92J6mSw0SyHuoQiys+ePdkEQ=="
+    }
+  ]
+}
+```
+
+## Create the Azure Service Bus Queues
+
+In order to create both of the Service Bus Queues, the Azure CLI will be used to deploy an Azure Resource Manager Template.  The link to the template is in the above defined values.  This step will require two JSON parameter files -- one for each Queue.
+
+The content of each file are below:
+
+```bash
+jims@dockeropolis:~$ cat imagepipelineprocq.parameters.json 
+{
+    "serviceBusNamespaceName": {
+        "value": "imagepipelinesbus"
+    },
+    "serviceBusQueueName": {
+        "value": "imagepipelineprocq"
+    }
+}
+```
+
+```bash
+jims@dockeropolis:~$ cat imagepipelinenotq.parameters.json 
+{
+    "serviceBusNamespaceName": {
+        "value": "imagepipelinesbus"
+    },
+    "serviceBusQueueName": {
+        "value": "imagepipelinenotq"
+    }
+}
+```
+
+The first template deployment will create both a Service Bus Namespace as well as the Service Bus Queue.  The second template deployment will create a second Service Bus Queue within the same Service Bus Namespace.  This is as desired.
+
+To create each Queue using the Azure CLI template deployment, follow below.  One thing to **note**, the current Azure CLI has an inconsistency when specifying a file for `parameters`.  The CLI requires that the file name be prefaced with an `@` symbol.  However, `=` can not be used between `--parameters` and the file name.
+
+For the Processing Queue:
+
+```bash
+jims@dockeropolis:~$ az resource group deployment create \
+> --name="imagepipelineproc-dep" \
+> --resource-group="imagepipelinerg" \
+> --template-uri="https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/101-servicebus-queue/azuredeploy.json" \
+> --parameters @./imagepipelineprocq.parameters.json
+{
+  "id": "/subscriptions/04f7ec88-8e28-41ed-8537-5e17766001f5/resourceGroups/imagepipelinerg/providers/Microsoft.Resources/deployments/imagepipelineproc-dep",
+  "name": "imagepipelineproc-dep",
+  "properties": {
+    "correlationId": "413ad9be-047d-4c45-904e-288b4366d8a8",
+    "debugSetting": null,
+    "dependencies": [
+      {
+        "dependsOn": [
+          {
+            "id": "/subscriptions/04f7ec88-8e28-41ed-8537-5e17766001f5/resourceGroups/imagepipelinerg/providers/Microsoft.ServiceBus/namespaces/imagepipelinesbus",
+            "resourceGroup": "imagepipelinerg",
+            "resourceName": "imagepipelinesbus",
+            "resourceType": "Microsoft.ServiceBus/namespaces"
+          }
+        ],
+        "id": "/subscriptions/04f7ec88-8e28-41ed-8537-5e17766001f5/resourceGroups/imagepipelinerg/providers/Microsoft.ServiceBus/namespaces/imagepipelinesbus/Queues/imagepipelineprocq",
+        "resourceGroup": "imagepipelinerg",
+        "resourceName": "imagepipelinesbus/imagepipelineprocq",
+        "resourceType": "Microsoft.ServiceBus/namespaces/Queues"
+      }
+    ],
+    "mode": "Incremental",
+    "outputs": {},
+    "parameters": {
+      "serviceBusNamespaceName": {
+        "type": "String",
+        "value": "imagepipelinesbus"
+      },
+      "serviceBusQueueName": {
+        "type": "String",
+        "value": "imagepipelineprocq"
+      }
+    },
+    "parametersLink": null,
+    "providers": [
+      {
+        "id": null,
+        "namespace": "Microsoft.ServiceBus",
+        "registrationState": null,
+        "resourceTypes": [
+          {
+            "aliases": null,
+            "apiVersions": null,
+            "locations": [
+              "westus"
+            ],
+            "properties": null,
+            "resourceType": "namespaces"
+          },
+          {
+            "aliases": null,
+            "apiVersions": null,
+            "locations": [
+              null
+            ],
+            "properties": null,
+            "resourceType": "namespaces/Queues"
+          }
+        ]
+      }
+    ],
+    "provisioningState": "Succeeded",
+    "template": null,
+    "templateLink": {
+      "contentVersion": "1.0.0.0",
+      "uri": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/101-servicebus-queue/azuredeploy.json"
+    },
+    "timestamp": "2016-12-01T22:11:33.542956+00:00"
+  },
+  "resourceGroup": "imagepipelinerg"
+}
+```
+
+For the Notification Queue:
+
+```bash
+jims@dockeropolis:~$ az resource group deployment create \
+> --name="imagepipelinepnot-dep" \
+> --resource-group="imagepipelinerg" \
+> --template-uri="https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/101-servicebus-queue/azuredeploy.json" \
+> --parameters @./imagepipelinenotq.parameters.json
+{
+  "id": "/subscriptions/04f7ec88-8e28-41ed-8537-5e17766001f5/resourceGroups/imagepipelinerg/providers/Microsoft.Resources/deployments/imagepipelineproc-dep",
+  "name": "imagepipelineproc-dep",
+  "properties": {
+    "correlationId": "9861c164-3140-43c8-b6ef-f5af9d669168",
+    "debugSetting": null,
+    "dependencies": [
+      {
+        "dependsOn": [
+          {
+            "id": "/subscriptions/04f7ec88-8e28-41ed-8537-5e17766001f5/resourceGroups/imagepipelinerg/providers/Microsoft.ServiceBus/namespaces/imagepipelinesbus",
+            "resourceGroup": "imagepipelinerg",
+            "resourceName": "imagepipelinesbus",
+            "resourceType": "Microsoft.ServiceBus/namespaces"
+          }
+        ],
+        "id": "/subscriptions/04f7ec88-8e28-41ed-8537-5e17766001f5/resourceGroups/imagepipelinerg/providers/Microsoft.ServiceBus/namespaces/imagepipelinesbus/Queues/imagepipelinenotq",
+        "resourceGroup": "imagepipelinerg",
+        "resourceName": "imagepipelinesbus/imagepipelinenotq",
+        "resourceType": "Microsoft.ServiceBus/namespaces/Queues"
+      }
+    ],
+    "mode": "Incremental",
+    "outputs": {},
+    "parameters": {
+      "serviceBusNamespaceName": {
+        "type": "String",
+        "value": "imagepipelinesbus"
+      },
+      "serviceBusQueueName": {
+        "type": "String",
+        "value": "imagepipelinenotq"
+      }
+    },
+    "parametersLink": null,
+    "providers": [
+      {
+        "id": null,
+        "namespace": "Microsoft.ServiceBus",
+        "registrationState": null,
+        "resourceTypes": [
+          {
+            "aliases": null,
+            "apiVersions": null,
+            "locations": [
+              "westus"
+            ],
+            "properties": null,
+            "resourceType": "namespaces"
+          },
+          {
+            "aliases": null,
+            "apiVersions": null,
+            "locations": [
+              null
+            ],
+            "properties": null,
+            "resourceType": "namespaces/Queues"
+          }
+        ]
+      }
+    ],
+    "provisioningState": "Succeeded",
+    "template": null,
+    "templateLink": {
+      "contentVersion": "1.0.0.0",
+      "uri": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/101-servicebus-queue/azuredeploy.json"
+    },
+    "timestamp": "2016-12-01T22:17:39.021599+00:00"
+  },
+  "resourceGroup": "imagepipelinerg"
+}
+```
+
+## Create the Azure Event Hub
+
+Just like the Queues above, Azure CLI will be used to deploy an Azure Resource Manager Template for creating the Event Hub.  The link to the template is in the above defined values.  The JSON parameters file for the Event Hub is as follows:
+
+```bash
+jims@dockeropolis:~$ az resource group deployment create \
+> --name="imagepipelineeh-dep" \
+> --resource-group="imagepipelinerg" \
+> --template-uri="https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/201-event-hubs-create-event-hub-and-consumer-group/azuredeploy.json" \
+> --parameters @./imagepipelineehanalyze.parameters.json
+{
+  "id": "/subscriptions/04f7ec88-8e28-41ed-8537-5e17766001f5/resourceGroups/imagepipelinerg/providers/Microsoft.Resources/deployments/imagepipelineeh-dep",
+  "name": "imagepipelineeh-dep",
+  "properties": {
+    "correlationId": "4dab1520-d636-4723-a26c-9b293768391f",
+    "debugSetting": null,
+    "dependencies": [
+      {
+        "dependsOn": [
+          {
+            "id": "/subscriptions/04f7ec88-8e28-41ed-8537-5e17766001f5/resourceGroups/imagepipelinerg/providers/Microsoft.EventHub/namespaces/imagepipelineehns",
+            "resourceGroup": "imagepipelinerg",
+            "resourceName": "imagepipelineehns",
+            "resourceType": "Microsoft.EventHub/namespaces"
+          }
+        ],
+        "id": "/subscriptions/04f7ec88-8e28-41ed-8537-5e17766001f5/resourceGroups/imagepipelinerg/providers/Microsoft.EventHub/Namespaces/imagepipelineehns/EventHubs/imagepipelineeh",
+        "resourceGroup": "imagepipelinerg",
+        "resourceName": "imagepipelineehns/imagepipelineeh",
+        "resourceType": "Microsoft.EventHub/Namespaces/EventHubs"
+      },
+      {
+        "dependsOn": [
+          {
+            "id": "/subscriptions/04f7ec88-8e28-41ed-8537-5e17766001f5/resourceGroups/imagepipelinerg/providers/Microsoft.EventHub/Namespaces/imagepipelineehns/EventHubs/imagepipelineeh",
+            "resourceGroup": "imagepipelinerg",
+            "resourceName": "imagepipelineehns/imagepipelineeh",
+            "resourceType": "Microsoft.EventHub/Namespaces/EventHubs"
+          }
+        ],
+        "id": "/subscriptions/04f7ec88-8e28-41ed-8537-5e17766001f5/resourceGroups/imagepipelinerg/providers/Microsoft.EventHub/Namespaces/imagepipelineehns/EventHubs/imagepipelineeh/ConsumerGroups/imagepipelineanalyze",
+        "resourceGroup": "imagepipelinerg",
+        "resourceName": "imagepipelineehns/imagepipelineeh/imagepipelineanalyze",
+        "resourceType": "Microsoft.EventHub/Namespaces/EventHubs/ConsumerGroups"
+      }
+    ],
+    "mode": "Incremental",
+    "outputs": {
+      "namespaceConnectionString": {
+        "type": "String",
+        "value": "Endpoint=sb://imagepipelineehns.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=2f1hHmSPO3Y57rXjdAr+0tcQiZCp10TVFMuxhTSZX3k="
+      },
+      "sharedAccessPolicyPrimaryKey": {
+        "type": "String",
+        "value": "2f1hHmSPO3Y57rXjdAr+0tcQiZCp10TVFMuxhTSZX3k="
+      }
+    },
+    "parameters": {
+      "consumerGroupName": {
+        "type": "String",
+        "value": "imagepipelineanalyze"
+      },
+      "eventHubName": {
+        "type": "String",
+        "value": "imagepipelineeh"
+      },
+      "namespaceName": {
+        "type": "String",
+        "value": "imagepipelineehns"
+      }
+    },
+    "parametersLink": null,
+    "providers": [
+      {
+        "id": null,
+        "namespace": "Microsoft.EventHub",
+        "registrationState": null,
+        "resourceTypes": [
+          {
+            "aliases": null,
+            "apiVersions": null,
+            "locations": [
+              "westus"
+            ],
+            "properties": null,
+            "resourceType": "Namespaces"
+          },
+          {
+            "aliases": null,
+            "apiVersions": null,
+            "locations": [
+              null
+            ],
+            "properties": null,
+            "resourceType": "Namespaces/EventHubs"
+          },
+          {
+            "aliases": null,
+            "apiVersions": null,
+            "locations": [
+              null
+            ],
+            "properties": null,
+            "resourceType": "Namespaces/EventHubs/ConsumerGroups"
+          }
+        ]
+      }
+    ],
+    "provisioningState": "Succeeded",
+    "template": null,
+    "templateLink": {
+      "contentVersion": "1.0.0.0",
+      "uri": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/201-event-hubs-create-event-hub-and-consumer-group/azuredeploy.json"
+    },
+    "timestamp": "2016-12-01T22:36:14.773061+00:00"
+  },
+  "resourceGroup": "imagepipelinerg"
+}
+```
+
+## Retrieve Azure Service Bus and Azure Event Hub Credentials
+
+Unfortunately, there is not a way to retrieve the credentials for either Service Bus or Event Hub from the
+Azure CLI.  In order to do this, one needs to go to the [Azure Portal](https://portal.azure.com).
+
+Rather than showing all the steps in images, the process is as follows:
+
+  1.  Log into the [portal](https://portal.azure.com)
+  2.  Along the left column, click `Resource Groups`
+  3.  In the field with the text `Filter by name`, enter the Resource Group name `imagepipelinerg`
+  4.  In the list below, select `imagepipelinerg`
+  5.  At this point, the portal should resemble:
+
+![Service Bus Resource Overview](https://raw.githubusercontent.com/jmspring/acs-deployments/master/deis_on_azure/imagepipeline_on_deis/creds_resource_group_overview.png "Service Bus Resource Overview")
+
+For the Azure Service Bus Namespace `imagepipelinesbus`, the values are:
+
+  - Name / Policy:  `RootManageSharedAccessKey`
+  - Key:  `d+efxLejTKA2vTAJB638XGPRDcc+PIyqWfBhO9D6IMg=`
+
+For the Azure Event Hub `imagepipelineehns`, the values are:
+
+  - Name / Policy:  `RootManageSharedAccessKey`
+  - Key:  `2f1aFtPO3Y57rXjdAr+0btIiZCp10TVFMuxhREXX3k=`
 
