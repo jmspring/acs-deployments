@@ -518,22 +518,14 @@ Rather than showing all the steps in images, the process is as follows:
   3.  In the field with the text `Filter by name`, enter the Resource Group name `imagepipelinerg`
   4.  In the list below, select `imagepipelinerg`
   5.  At this point, the portal should resemble:
-
-![Resource Group Overview](https://raw.githubusercontent.com/jmspring/acs-deployments/master/deis_on_azure/imagepipeline_on_deis/creds_resource_group_overview.png "Resource Group Overview")
-
+      ![Resource Group Overview](https://raw.githubusercontent.com/jmspring/acs-deployments/master/deis_on_azure/imagepipeline_on_deis/creds_resource_group_overview.png "Resource Group Overview")
   6.  Select the Service Bus `imagepipelinesbus`.  The portal will resemble:
-
-![Service Bus Resource Overview](https://raw.githubusercontent.com/jmspring/acs-deployments/master/deis_on_azure/imagepipeline_on_deis/creds_service_bus_overview.png "Service Bus Resource Overview")
-
+      ![Service Bus Resource Overview](https://raw.githubusercontent.com/jmspring/acs-deployments/master/deis_on_azure/imagepipeline_on_deis/creds_service_bus_overview.png "Service Bus Resource Overview")
   7.  Select `Shared Access Policy`, the portal should resemble:
-
-![Shared Access Policy](https://raw.githubusercontent.com/jmspring/acs-deployments/master/deis_on_azure/imagepipeline_on_deis/creds_service_bus_shared_access_policy.png "Shared Access Policy")
-
+      ![Shared Access Policy](https://raw.githubusercontent.com/jmspring/acs-deployments/master/deis_on_azure/imagepipeline_on_deis/creds_service_bus_shared_access_policy.png "Shared Access Policy")
   8.  On this screen, select the Policy name.  It should be `RootManageSharedAccessKey`.
   9.  Click on `RootManageSharedAccessKey`.  This will open a pane showing the access keys as follows:
-
-![Shared Access Policy Key](https://raw.githubusercontent.com/jmspring/acs-deployments/master/deis_on_azure/imagepipeline_on_deis/creds_service_bus_shared_access_policy_key.png "Shared Access Policy Key")
-
+      ![Shared Access Policy Key](https://raw.githubusercontent.com/jmspring/acs-deployments/master/deis_on_azure/imagepipeline_on_deis/creds_service_bus_shared_access_policy_key.png "Shared Access Policy Key")
   10.  Click the Clipboard icon next to the `Primary Key`, this will copy it to the clipboard.
   11.  Save the Policy/Name and Key somewhere.  
 
