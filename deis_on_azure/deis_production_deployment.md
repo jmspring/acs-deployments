@@ -26,14 +26,14 @@ as well as specify some Storage specific values.
 
 Values taken from the earlier deployment:
 
-  - **resource group**: deisonk8srg
-  - **location**: westus
+  - **resource group**: `deisonk8srg`
+  - **location**: `westus`
 
 Values specific to the storage account:
 
-  - **name**: deisconfig
-  - **kind**: Storage
-  - **sku**: Standard_LRS
+  - **name**: `deisconfig`
+  - **kind**: `Storage`
+  - **sku**: `Standard_LRS`
 
 Creating the Storage Account:
 
