@@ -584,203 +584,158 @@ To learn more about deis, execute:
 
 jims@dockeropolis:~$ mv deis ~/bin/
 jims@dockeropolis:~$ deis version
-v2.8.0
+v2.9.1
 ```
 
-Install Helm Classic:
+Install Helm:
 
 ```bash
-jims@dockeropolis:~$ curl -sSL https://get.helm.sh | bash
-Downloading helmc-latest-linux-amd64 from Google Cloud Storage...
+jims@dockeropolis:~$ wget https://kubernetes-helm.storage.googleapis.com/helm-v2.0.0-linux-amd64.tar.gz
+--2016-12-07 10:11:33--  https://kubernetes-helm.storage.googleapis.com/helm-v2.0.0-linux-amd64.tar.gz
+Resolving kubernetes-helm.storage.googleapis.com (kubernetes-helm.storage.googleapis.com)... 216.58.216.176, 2607:f8b0:400a:807::2010
+Connecting to kubernetes-helm.storage.googleapis.com (kubernetes-helm.storage.googleapis.com)|216.58.216.176|:443... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 14111189 (13M) [application/x-tar]
+Saving to: ‘helm-v2.0.0-linux-amd64.tar.gz’
 
-helmc is now available in your current directory.
+helm-v2.0.0-linux-amd64.tar. 100%[=============================================>]  13.46M  11.3MB/s    in 1.2s    
 
-To learn more about helm classic, execute:
+2016-12-07 10:11:35 (11.3 MB/s) - ‘helm-v2.0.0-linux-amd64.tar.gz’ saved [14111189/14111189]
 
-    $ ./helmc
-
-jims@dockeropolis:~$ mv helmc ~/bin/
-jims@dockeropolis:~$ helmc --version
-helmc version 0.8.1+a9c55cf
+jims@dockeropolis:~$ tar -zxvf helm-v2.0.0-linux-amd64.tar.gz 
+linux-amd64/
+linux-amd64/helm
+linux-amd64/LICENSE
+linux-amd64/README.md
+jims@dockeropolis:$ cp linux-amd64/helm ~/bin
+jims@dockeropolis:~$ helm version
+Client: &version.Version{SemVer:"v2.0.0", GitCommit:"51bdad42756dfaf3234f53ef3d3cb6bcd94144c2", GitTreeState:"clean"}
+Error: cannot connect to Tiller
 ```
+
+Note, that Helm requires that you run an [initialization] (https://github.com/kubernetes/helm/blob/master/docs/quickstart.md) 
+once per Kubernetes cluster.  To see which cluster Helm will install Tiller into, check your
+Kubernetes config:
+
+```bash
+jims@dockeropolis:~$ kubectl config current-context
+k8sanddeis
+```
+
+Initializing Helm:
+
+```bash
+jims@dockeropolis:~/go/src/github.com/Azure/acs-engine/examples/hackfest$ helm init
+Creating /home/jims/.helm 
+Creating /home/jims/.helm/repository 
+Creating /home/jims/.helm/repository/cache 
+Creating /home/jims/.helm/repository/local 
+Creating /home/jims/.helm/repository/repositories.yaml 
+Creating /home/jims/.helm/repository/local/index.yaml 
+$HELM_HOME has been configured at $HOME/.helm.
+
+Tiller (the helm server side component) has been installed into your Kubernetes Cluster.
+Happy Helming!
+```
+
+At this point one is ready to install workflow.
 
 ### Install Deis Workflow on the Kubernetes Cluster
 
 Since there is already an existing Kubernetes cluster, the path for installing Deis Workflow
 follows the [Vagrant procress](https://deis.com/docs/workflow/quickstart/provider/vagrant/install-vagrant/).
 
-First step is to make sure `helmc` finds the config file for `kubectl`.  **Note** - if the terminal 
+First step is to make sure `helm` finds the config file for `kubectl`.  **Note** - if the terminal 
 session was logged out of or restarted or did anything to disrupt the value of `KUBECONFIG` configured
 above, the appropriate steps will be needed to ensure it is configured correctly.
 
 ```bash
-jims@dockeropolis:~$ helmc target
-Kubernetes master is running at https://k8sanddeis-k8s-masters.westus.cloudapp.azure.com
-Heapster is running at https://k8sanddeis-k8s-masters.westus.cloudapp.azure.com/api/v1/proxy/namespaces/kube-system/services/heapster
-KubeDNS is running at https://k8sanddeis-k8s-masters.westus.cloudapp.azure.com/api/v1/proxy/namespaces/kube-system/services/kube-dns
-kubernetes-dashboard is running at https://k8sanddeis-k8s-masters.westus.cloudapp.azure.com/api/v1/proxy/namespaces/kube-system/services/kubernetes-dashboard
-
-To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'.
+jims@dockeropolis:~$ helm version
+Client: &version.Version{SemVer:"v2.0.0", GitCommit:"51bdad42756dfaf3234f53ef3d3cb6bcd94144c2", GitTreeState:"clean"}
+Server: &version.Version{SemVer:"v2.0.0", GitCommit:"51bdad42756dfaf3234f53ef3d3cb6bcd94144c2", GitTreeState:"clean"}
 ```
-
-Looks a lot like the `kubectl cluster-info` call above.
 
 Next step is to add the Deis chart repository:
 
 ```bash
-jims@dockeropolis:~$ helmc repo add deis https://github.com/deis/charts
----> Checking things locally...
----> Creating /home/jims/.helmc/config.yaml
----> Everything looks good! Happy helming!
----> Continuing onwards and upwards!
----> Cloning into '/home/jims/.helmc/cache/deis'...
----> Hooray! Successfully added the repo.
-```
-
-Next retrieve the current Deis Workflow:
-
-```bash
-jims@dockeropolis:~$ helmc fetch deis/workflow-v2.8.0 
----> Fetched chart into workspace /home/jims/.helmc/workspace/charts/workflow-v2.8.0
----> Done
-```
-
-Create the Deis Workflow manifest for Kubernetes:
-
-```bash
-jims@dockeropolis:~$ helmc generate -x manifests workflow-v2.8.0
----> Ran 17 generators.
+jims@dockeropolis:~$ helm repo add deis https://charts.deis.com/workflow
+"deis" has been added to your repositories
 ```
 
 Finally install the Deis Workflow.  Note that this will take some time.  Using `kubectl` the
 progress of bring up can be monitored.
 
 ```bash
-jims@dockeropolis:~$ helmc install workflow-v2.8.0
----> Running `kubectl create -f` ...
-namespace "deis" created
+jims@dockeropolis:~$ helm install deis/workflow --namespace deis
+Fetched deis/workflow to workflow-v2.9.0.tgz
+NAME: solitary-puma
+LAST DEPLOYED: Wed Dec  7 11:17:07 2016
+NAMESPACE: deis
+STATUS: DEPLOYED
 
-secret "builder-ssh-private-keys" created
+RESOURCES:
+==> v1/Secret
+NAME                    TYPE      DATA      AGE
+objectstorage-keyfile   Opaque    2         2s
+minio-user   Opaque    2         2s
+deis-router-dhparam   Opaque    1         2s
 
-secret "builder-key-auth" created
+==> v1/ConfigMap
+NAME                   DATA      AGE
+dockerbuilder-config   2         2s
+slugbuilder-config   2         2s
+slugrunner-config   1         2s
 
-secret "django-secret-key" created
+==> v1/ServiceAccount
+NAME          SECRETS   AGE
+deis-logger   1         2s
+deis-controller   1         2s
+deis-registry   1         2s
+deis-database   1         2s
+deis-workflow-manager   1         2s
+deis-monitor-telegraf   1         2s
+deis-nsqd   1         2s
+deis-builder   1         2s
+deis-minio   1         2s
+deis-router   1         2s
+deis-logger-fluentd   1         2s
 
-secret "database-creds" created
+==> v1/Service
+NAME           CLUSTER-IP   EXTERNAL-IP   PORT(S)    AGE
+deis-builder   10.0.35.53   <none>        2222/TCP   2s
+deis-database   10.0.138.202   <none>    5432/TCP   2s
+deis-router   10.0.214.177   <pending>   80/TCP,443/TCP,2222/TCP,9090/TCP   2s
+deis-registry   10.0.136.56   <none>    80/TCP    2s
+deis-monitor-grafana   10.0.126.143   <none>    80/TCP    2s
+deis-monitor-influxapi   10.0.113.151   <none>    80/TCP    2s
+deis-logger-redis   10.0.182.96   <none>    6379/TCP   2s
+deis-monitor-influxui   10.0.14.235   <none>    80/TCP    2s
+deis-controller   10.0.13.51   <none>    80/TCP    1s
+deis-minio   10.0.129.190   <none>    9000/TCP   1s
+deis-workflow-manager   10.0.123.151   <none>    80/TCP    1s
+deis-logger   10.0.49.27   <none>    80/TCP    1s
+deis-nsqd   10.0.186.8   <none>    4151/TCP,4150/TCP   1s
 
-secret "logger-redis-creds" created
+==> extensions/Deployment
+NAME                    DESIRED   CURRENT   UP-TO-DATE   AVAILABLE   AGE
+deis-workflow-manager   1         1         1            0           1s
+deis-controller   1         1         1         0         1s
+deis-router   1         1         1         0         1s
+deis-minio   1         1         1         0         1s
+deis-monitor-grafana   1         1         1         0         1s
+deis-database   1         1         1         0         1s
+deis-monitor-influxdb   1         1         1         0         1s
+deis-builder   1         1         1         0         1s
+deis-logger   1         0         0         0         1s
+deis-nsqd   1         0         0         0         1s
+deis-logger-redis   1         0         0         0         1s
+deis-registry   1         0         0         0         1s
 
-secret "objectstorage-keyfile" created
-
-secret "deis-router-dhparam" created
-
-serviceaccount "deis-builder" created
-
-serviceaccount "deis-controller" created
-
-serviceaccount "deis-database" created
-
-serviceaccount "deis-logger-fluentd" created
-
-serviceaccount "deis-logger" created
-
-serviceaccount "deis-minio" created
-
-serviceaccount "deis-monitor-telegraf" created
-
-serviceaccount "deis-nsqd" created
-
-serviceaccount "deis-registry" created
-
-serviceaccount "deis-router" created
-
-serviceaccount "deis-workflow-manager" created
-
-service "deis-builder" created
-
-service "deis-controller" created
-
-service "deis-database" created
-
-service "deis-logger-redis" created
-
-service "deis-logger" created
-
-service "deis-minio" created
-
-service "deis-monitor-grafana" created
-
-service "deis-monitor-influxapi" created
-
-service "deis-monitor-influxui" created
-
-service "deis-nsqd" created
-
-service "deis-registry" created
-
-service "deis-router" created
-
-service "deis-workflow-manager" created
-
-replicationcontroller "deis-builder" created
-
-replicationcontroller "deis-controller" created
-
-replicationcontroller "deis-registry" created
-
-replicationcontroller "deis-router" created
-
-replicationcontroller "deis-workflow-manager" created
-
-deployment "deis-builder" created
-
-deployment "deis-controller" created
-
-deployment "deis-database" created
-
-deployment "deis-logger" created
-
-deployment "deis-logger-redis" created
-
-deployment "deis-minio" created
-
-deployment "deis-monitor-grafana" created
-
-deployment "deis-monitor-influxdb" created
-
-deployment "deis-nsqd" created
-
-deployment "deis-registry" created
-
-deployment "deis-router" created
-
-deployment "deis-workflow-manager" created
-
-daemonset "deis-logger-fluentd" created
-
-daemonset "deis-monitor-telegraf" created
-
-daemonset "deis-registry-proxy" created
-
----> Done
-========================================
-# Workflow v2.8.0
-
-Please report any issues you find in testing Workflow to the appropriate GitHub repository:
-- builder: https://github.com/deis/builder
-- chart: https://github.com/deis/charts
-- controller: https://github.com/deis/controller
-- database: https://github.com/deis/postgres
-- fluentd: https://github.com/deis/fluentd
-- helm classic: https://github.com/helm/helm-classic
-- logger: https://github.com/deis/logger
-- minio: https://github.com/deis/minio
-- monitor: https://github.com/deis/monitor
-- nsq: https://github.com/deis/nsq
-- registry: https://github.com/deis/registry
-- router: https://github.com/deis/router
-- workflow manager: https://github.com/deis/workflow-manager
-========================================
+==> extensions/DaemonSet
+NAME                    DESIRED   CURRENT   NODE-SELECTOR   AGE
+deis-monitor-telegraf   7         7         <none>          1s
+deis-logger-fluentd   7         7         <none>    1s
+deis-registry-proxy   7         7         <none>    1s
 ```
 
 By running `kubectl --namespace=deis get pods`, you can monitor the progress.  An interim 
