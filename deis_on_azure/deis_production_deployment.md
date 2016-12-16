@@ -96,6 +96,7 @@ jims@dockeropolis:~$ az storage account keys list \
     }
   ]
 }
+```
 
 ## Retrieve the `values.yaml` file
 
